@@ -1,278 +1,3 @@
-# import tkinter as tk
-# from tkinter import ttk, messagebox
-# import mysql.connector
-# from dotenv import load_dotenv
-# import os
-# load_dotenv(dotenv_path='.env')
-
-# # Establish connection with MySQL database
-# def connect_db():
-#     try:
-#         conn = mysql.connector.connect(
-#             host='localhost',
-#             user='root',
-#             password = os.getenv('password'),
-#             database='business_supply'
-#         )
-#         return conn
-#     except mysql.connector.Error as err:
-#         messagebox.showerror("Database Error", f"Error: {err}")
-#         return None
-
-# # Close connection with MySQL database
-# def close_db(conn):
-#     if conn:
-#         conn.close()
-
-# # Validate input fields
-# def validate_fields(fields):
-#     for field in fields:
-#         if not field.get().strip():
-#             messagebox.showerror("Validation Error", "All fields must be filled.")
-#             return False
-#     return True
-
-# # Main application window
-# class BusinessSupplyApp:
-#     def __init__(self, root):
-#         self.root = root
-#         self.root.title("Business Supply System")
-#         self.create_widgets()
-
-#     def create_widgets(self):
-#         # Tabs for different procedures
-#         tab_control = ttk.Notebook(self.root)
-
-#         self.add_owner_tab(tab_control)
-#         self.add_business_tab(tab_control)
-#         self.add_service_tab(tab_control)
-#         self.add_location_tab(tab_control)
-#         # Additional tabs...
-
-#         tab_control.pack(expand=1, fill="both")
-
-#     def add_location_tab(self, tab_control):
-#         # Implement similarly to other tabs
-#         # Placeholder for the add_location_tab method
-#         tab = ttk.Frame(tab_control)
-#         tab_control.add(tab, text="Add Location")
-
-#         # Example fields; you should expand this based on your requirements
-#         ttk.Label(tab, text="Location Label:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-#         location_label = ttk.Entry(tab)
-#         location_label.grid(row=0, column=1, padx=10, pady=5)
-
-#         ttk.Label(tab, text="X Coordinate:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-#         x_coord = ttk.Entry(tab)
-#         x_coord.grid(row=1, column=1, padx=10, pady=5)
-
-#         ttk.Label(tab, text="Y Coordinate:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-#         y_coord = ttk.Entry(tab)
-#         y_coord.grid(row=2, column=1, padx=10, pady=5)
-
-#         ttk.Label(tab, text="Space:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-#         space = ttk.Entry(tab)
-#         space.grid(row=3, column=1, padx=10, pady=5)
-
-#         def add_location():
-#             if not validate_fields([location_label, x_coord, y_coord, space]):
-#                 return
-#             conn = connect_db()
-#             if conn:
-#                 cursor = conn.cursor()
-#                 try:
-#                     cursor.callproc('add_location', [
-#                         location_label.get(),
-#                         x_coord.get(),
-#                         y_coord.get(),
-#                         space.get()
-#                     ])
-#                     conn.commit()
-#                     messagebox.showinfo("Success", "Location added successfully.")
-#                     # Clear all entry fields
-#                     location_label.delete(0, tk.END)
-#                     x_coord.delete(0, tk.END)
-#                     y_coord.delete(0, tk.END)
-#                     space.delete(0, tk.END)
-#                 except mysql.connector.Error as err:
-#                     messagebox.showerror("Error", f"Failed to add location: {err}")
-#                     print(f"Stored procedure error: {err}")
-#                 finally:
-#                     close_db(conn)
-
-#         ttk.Button(tab, text="Add Location", command=add_location).grid(row=4, column=1, pady=10, sticky=tk.E)
-#         ttk.Button(tab, text="Cancel", command=self.root.destroy).grid(row=4, column=0, pady=10, sticky=tk.W)
-
-#     def add_service_tab(self, tab_control):
-#         # Create a new tab
-#         tab = ttk.Frame(tab_control)
-#         tab_control.add(tab, text="Add Service")
-
-#         # Labels and Entry Widgets for Input Fields
-#         ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-#         service_id = ttk.Entry(tab)
-#         service_id.grid(row=0, column=1, padx=10, pady=5)
-
-#         ttk.Label(tab, text="Service Name:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-#         service_name = ttk.Entry(tab)
-#         service_name.grid(row=1, column=1, padx=10, pady=5)
-
-#         ttk.Label(tab, text="Home Base:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-#         home_base = ttk.Entry(tab)
-#         home_base.grid(row=2, column=1, padx=10, pady=5)
-
-#         ttk.Label(tab, text="Manager Username:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-#         manager = ttk.Entry(tab)
-#         manager.grid(row=3, column=1, padx=10, pady=5)
-
-#         # Function to Add Service
-#         def add_service():
-#             # Validate all input fields are filled
-#             if not validate_fields([service_id, service_name, home_base, manager]):
-#                 return
-
-#             # Establish Database Connection
-#             conn = connect_db()
-#             if conn:
-#                 cursor = conn.cursor()
-#                 try:
-#                     # Call the 'add_service' stored procedure
-#                     cursor.callproc('add_service', [
-#                         service_id.get(),
-#                         service_name.get(),
-#                         home_base.get(),
-#                         manager.get()
-#                     ])
-#                     conn.commit()
-#                     messagebox.showinfo("Success", "Service added successfully.")
-
-#                     # Clear all entry fields after successful addition
-#                     service_id.delete(0, tk.END)
-#                     service_name.delete(0, tk.END)
-#                     home_base.delete(0, tk.END)
-#                     manager.delete(0, tk.END)
-
-#                 except mysql.connector.Error as err:
-#                     messagebox.showerror("Error", f"Failed to add service: {err}")
-#                     print(f"Stored procedure error: {err}")  # For debugging purposes
-
-#                 finally:
-#                     close_db(conn)
-
-#         # Buttons for Adding Service and Canceling
-#         ttk.Button(tab, text="Add Service", command=add_service).grid(row=4, column=1, pady=10, sticky=tk.E)
-#         ttk.Button(tab, text="Cancel", command=self.root.destroy).grid(row=4, column=0, pady=10, sticky=tk.W)
-
-
-#     def add_owner_tab(self, tab_control):
-#         tab = ttk.Frame(tab_control)
-#         tab_control.add(tab, text="Add Owner")
-
-#         ttk.Label(tab, text="First Name:").grid(row=0, column=0, padx=10, pady=5)
-#         first_name = ttk.Entry(tab)
-#         first_name.grid(row=0, column=1)
-
-#         ttk.Label(tab, text="Last Name:").grid(row=1, column=0, padx=10, pady=5)
-#         last_name = ttk.Entry(tab)
-#         last_name.grid(row=1, column=1)
-
-#         ttk.Label(tab, text="Username:").grid(row=2, column=0, padx=10, pady=5)
-#         username = ttk.Entry(tab)
-#         username.grid(row=2, column=1)
-
-#         ttk.Label(tab, text="Address:").grid(row=3, column=0, padx=10, pady=5)
-#         address = ttk.Entry(tab)
-#         address.grid(row=3, column=1)
-
-#         ttk.Label(tab, text="Birthdate (YYYY-MM-DD):").grid(row=4, column=0, padx=10, pady=5)
-#         birthdate = ttk.Entry(tab)
-#         birthdate.grid(row=4, column=1)
-
-#         def add_owner():
-#             if not validate_fields([first_name, last_name, username, address, birthdate]):
-#                 return
-#             conn = connect_db()
-#             if conn:
-#                 cursor = conn.cursor()
-#                 try:
-#                     cursor.callproc('add_owner', [
-#                         username.get(),
-#                         first_name.get(),
-#                         last_name.get(),
-#                         address.get(),
-#                         birthdate.get()
-#                     ])
-#                     conn.commit()
-#                     messagebox.showinfo("Success", "Owner added successfully.")
-#                     # Clear all entry fields
-#                     first_name.delete(0, tk.END)
-#                     last_name.delete(0, tk.END)
-#                     username.delete(0, tk.END)
-#                     address.delete(0, tk.END)
-#                     birthdate.delete(0, tk.END)
-#                 except mysql.connector.Error as err:
-#                     messagebox.showerror("Error", f"Failed to add owner: {err}")
-#                 finally:
-#                     close_db(conn)
-
-#         ttk.Button(tab, text="Add Owner", command=add_owner).grid(row=5, column=1, pady=10)
-#         ttk.Button(tab, text="Cancel", command=self.root.destroy).grid(row=5, column=0, pady=10)
-
-#     # Add Business Tab
-#     def add_business_tab(self, tab_control):
-#         tab = ttk.Frame(tab_control)
-#         tab_control.add(tab, text="Add Business")
-
-#         ttk.Label(tab, text="Business Name:").grid(row=0, column=0, padx=10, pady=5)
-#         business_name = ttk.Entry(tab)
-#         business_name.grid(row=0, column=1)
-
-#         ttk.Label(tab, text="Rating:").grid(row=1, column=0, padx=10, pady=5)
-#         rating = ttk.Entry(tab)
-#         rating.grid(row=1, column=1)
-
-#         ttk.Label(tab, text="Spent:").grid(row=2, column=0, padx=10, pady=5)
-#         spent = ttk.Entry(tab)
-#         spent.grid(row=2, column=1)
-
-#         ttk.Label(tab, text="Location:").grid(row=3, column=0, padx=10, pady=5)
-#         location = ttk.Entry(tab)
-#         location.grid(row=3, column=1)
-
-#         def add_business():
-#             if not validate_fields([business_name, rating, spent, location]):
-#                 return
-#             conn = connect_db()
-#             if conn:
-#                 cursor = conn.cursor()
-#                 try:
-#                     cursor.callproc('add_business', [
-#                         business_name.get(),
-#                         rating.get(),
-#                         spent.get(),
-#                         location.get()
-#                     ])
-#                     conn.commit()
-#                     messagebox.showinfo("Success", "Business added successfully.")
-#                     business_name.delete(0, tk.END)
-#                     rating.delete(0, tk.END)
-#                     spent.delete(0, tk.END)
-#                     location.delete(0, tk.END)
-#                 except mysql.connector.Error as err:
-#                     messagebox.showerror("Error", f"Failed to add business: {err}")
-#                 finally:
-#                     close_db(conn)
-
-#         ttk.Button(tab, text="Add Business", command=add_business).grid(row=4, column=1, pady=10)
-#         ttk.Button(tab, text="Cancel", command=self.root.destroy).grid(row=4, column=0, pady=10)
-
-#     # Additional
-
-# if __name__ == "__main__":
-#     root = tk.Tk()
-#     app = BusinessSupplyApp(root)
-#     root.mainloop()
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 import mysql.connector
@@ -317,71 +42,148 @@ class BusinessSupplyApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Business Supply System")
+        self.root.geometry("1400x800")
         self.create_widgets()
 
     def create_widgets(self):
-        # Tabs for different procedures and views
-        tab_control = ttk.Notebook(self.root)
+        # Create PanedWindow to split the window
+        paned = ttk.PanedWindow(self.root, orient=tk.HORIZONTAL)
+        paned.pack(fill=tk.BOTH, expand=True)
 
-        # Stored Procedure Tabs
-        self.add_owner_tab(tab_control)
-        self.add_business_tab(tab_control)
-        self.add_service_tab(tab_control)
-        self.add_location_tab(tab_control)
-        self.add_employee_tab(tab_control)
-        self.add_driver_role_tab(tab_control)
-        self.add_worker_role_tab(tab_control)
-        self.add_product_tab(tab_control)
-        self.add_van_tab(tab_control)
-        self.start_funding_tab(tab_control)
-        self.hire_employee_tab(tab_control)
-        self.fire_employee_tab(tab_control)
-        self.manage_service_tab(tab_control)
-        self.takeover_van_tab(tab_control)
-        self.load_van_tab(tab_control)
-        self.refuel_van_tab(tab_control)
-        self.drive_van_tab(tab_control)
-        self.purchase_product_tab(tab_control)
-        self.remove_product_tab(tab_control)
-        self.remove_van_tab(tab_control)
-        self.remove_driver_role_tab(tab_control)
+        # Left Frame for Navigation
+        self.left_frame = ttk.Frame(paned, width=300, relief=tk.SUNKEN)
+        paned.add(self.left_frame, weight=1)
 
-        # View Display Tabs
-        self.display_owner_view_tab(tab_control)
-        self.display_employee_view_tab(tab_control)
-        self.display_driver_view_tab(tab_control)
-        self.display_location_view_tab(tab_control)
-        self.display_product_view_tab(tab_control)
-        self.display_service_view_tab(tab_control)
+        # Right Frame for Content
+        self.right_frame = ttk.Frame(paned, relief=tk.SUNKEN)
+        paned.add(self.right_frame, weight=4)
 
-        tab_control.pack(expand=1, fill="both")
+        # Setup Navigation Treeview
+        self.setup_navigation()
 
-    # -------------------- Stored Procedure Tabs --------------------
+    def setup_navigation(self):
+        # Create Treeview
+        self.nav_tree = ttk.Treeview(self.left_frame)
+        self.nav_tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-    def add_owner_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Owner")
+        # Define parent nodes
+        procedures_node = self.nav_tree.insert("", "end", text="Stored Procedures", open=True)
+        views_node = self.nav_tree.insert("", "end", text="Views", open=True)
+
+        # List of Stored Procedures
+        self.stored_procedures = [
+            "Add Owner",
+            "Add Business",
+            "Add Service",
+            "Add Location",
+            "Add Employee",
+            "Add Driver Role",
+            "Add Worker Role",
+            "Add Product",
+            "Add Van",
+            "Start Funding",
+            "Hire Employee",
+            "Fire Employee",
+            "Manage Service",
+            "Takeover Van",
+            "Load Van",
+            "Refuel Van",
+            "Drive Van",
+            "Purchase Product",
+            "Remove Product",
+            "Remove Van",
+            "Remove Driver Role"
+        ]
+
+        # List of Views
+        self.views = [
+            "Display Owner View",
+            "Display Employee View",
+            "Display Driver View",
+            "Display Location View",
+            "Display Product View",
+            "Display Service View"
+        ]
+
+        # Insert procedures into Treeview
+        for proc in self.stored_procedures:
+            self.nav_tree.insert(procedures_node, "end", text=proc)
+
+        # Insert views into Treeview
+        for view in self.views:
+            self.nav_tree.insert(views_node, "end", text=view)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
+        self.nav_tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Bind selection event
+        self.nav_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+
+    def on_tree_select(self, event):
+        selected_item = self.nav_tree.focus()
+        item_text = self.nav_tree.item(selected_item, "text")
+        parent = self.nav_tree.parent(selected_item)
+        parent_text = self.nav_tree.item(parent, "text") if parent else ""
+
+        # Clear the right frame
+        for widget in self.right_frame.winfo_children():
+            widget.destroy()
+
+        # Determine whether it's a procedure or view
+        if parent_text == "Stored Procedures":
+            # Call the corresponding method
+            method_name = f"{self.format_method_name(item_text)}_form"
+            method = getattr(self, method_name, None)
+            if method:
+                method()
+            else:
+                self.show_message(f"No form implemented for {item_text}")
+        elif parent_text == "Views":
+            # Call the corresponding method
+            method_name = f"display_{self.format_method_name(item_text)}"
+            method = getattr(self, method_name, None)
+            if method:
+                method()
+            else:
+                self.show_message(f"No display implemented for {item_text}")
+
+    def format_method_name(self, text):
+        # Converts text like "Add Owner" to "add_owner"
+        return text.lower().replace(" ", "_")
+
+    def show_message(self, message):
+        messagebox.showinfo("Information", message)
+
+    # -------------------- Stored Procedure Forms --------------------
+
+    def add_owner_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Owner", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="First Name:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        first_name = ttk.Entry(tab)
-        first_name.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="First Name:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        first_name = ttk.Entry(form_frame)
+        first_name.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Last Name:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        last_name = ttk.Entry(tab)
-        last_name.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Last Name:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        last_name = ttk.Entry(form_frame)
+        last_name.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Username:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        username = ttk.Entry(tab)
-        username.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Username:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        username = ttk.Entry(form_frame)
+        username.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Address:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        address = ttk.Entry(tab)
-        address.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Address:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        address = ttk.Entry(form_frame)
+        address.grid(row=4, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Birthdate (YYYY-MM-DD):").grid(row=4, column=0, padx=10, pady=5, sticky=tk.E)
-        birthdate = ttk.Entry(tab)
-        birthdate.grid(row=4, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Birthdate (YYYY-MM-DD):").grid(row=5, column=0, sticky=tk.E, padx=5, pady=5)
+        birthdate = ttk.Entry(form_frame)
+        birthdate.grid(row=5, column=1, padx=5, pady=5)
 
         # Add Owner Function
         def add_owner():
@@ -413,29 +215,34 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Owner", command=add_owner).grid(row=5, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([first_name, last_name, username, address, birthdate])).grid(row=5, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=6, column=0, columnspan=2, pady=20)
 
-    def add_business_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Business")
+        ttk.Button(button_frame, text="Add Owner", command=add_owner).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[first_name, last_name, username, address, birthdate])).pack(side=tk.RIGHT, padx=5)
+
+    def add_business_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Business", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Business Name:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        business_name = ttk.Entry(tab)
-        business_name.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Business Name:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        business_name = ttk.Entry(form_frame)
+        business_name.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Rating (1-5):").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        rating = ttk.Entry(tab)
-        rating.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Rating (1-5):").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        rating = ttk.Entry(form_frame)
+        rating.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Spent:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        spent = ttk.Entry(tab)
-        spent.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Spent:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        spent = ttk.Entry(form_frame)
+        spent.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Location:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        location = ttk.Entry(tab)
-        location.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Location:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        location = ttk.Entry(form_frame)
+        location.grid(row=4, column=1, padx=5, pady=5)
 
         # Add Business Function
         def add_business():
@@ -485,29 +292,34 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Business", command=add_business).grid(row=4, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([business_name, rating, spent, location])).grid(row=4, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
-    def add_service_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Service")
+        ttk.Button(button_frame, text="Add Business", command=add_business).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[business_name, rating, spent, location])).pack(side=tk.RIGHT, padx=5)
+
+    def add_service_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Service", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Service Name:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        service_name = ttk.Entry(tab)
-        service_name.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service Name:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        service_name = ttk.Entry(form_frame)
+        service_name.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Home Base:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        home_base = ttk.Entry(tab)
-        home_base.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Home Base:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        home_base = ttk.Entry(form_frame)
+        home_base.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Manager Username:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        manager = ttk.Entry(tab)
-        manager.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Manager Username:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        manager = ttk.Entry(form_frame)
+        manager.grid(row=4, column=1, padx=5, pady=5)
 
         # Add Service Function
         def add_service():
@@ -538,29 +350,34 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Service", command=add_service).grid(row=4, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([service_id, service_name, home_base, manager])).grid(row=4, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
-    def add_location_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Location")
+        ttk.Button(button_frame, text="Add Service", command=add_service).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, service_name, home_base, manager])).pack(side=tk.RIGHT, padx=5)
+
+    def add_location_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Location", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Location Label:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        location_label = ttk.Entry(tab)
-        location_label.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Location Label:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        location_label = ttk.Entry(form_frame)
+        location_label.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="X Coordinate:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        x_coord = ttk.Entry(tab)
-        x_coord.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="X Coordinate:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        x_coord = ttk.Entry(form_frame)
+        x_coord.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Y Coordinate:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        y_coord = ttk.Entry(tab)
-        y_coord.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Y Coordinate:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        y_coord = ttk.Entry(form_frame)
+        y_coord.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Space:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        space = ttk.Entry(tab)
-        space.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Space:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        space = ttk.Entry(form_frame)
+        space.grid(row=4, column=1, padx=5, pady=5)
 
         # Add Location Function
         def add_location():
@@ -603,49 +420,54 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Location", command=add_location).grid(row=4, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([location_label, x_coord, y_coord, space])).grid(row=4, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
-    def add_employee_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Employee")
+        ttk.Button(button_frame, text="Add Location", command=add_location).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[location_label, x_coord, y_coord, space])).pack(side=tk.RIGHT, padx=5)
+
+    def add_employee_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Employee", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        username = ttk.Entry(tab)
-        username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        username = ttk.Entry(form_frame)
+        username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="First Name:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        first_name = ttk.Entry(tab)
-        first_name.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="First Name:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        first_name = ttk.Entry(form_frame)
+        first_name.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Last Name:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        last_name = ttk.Entry(tab)
-        last_name.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Last Name:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        last_name = ttk.Entry(form_frame)
+        last_name.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Address:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        address = ttk.Entry(tab)
-        address.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Address:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        address = ttk.Entry(form_frame)
+        address.grid(row=4, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Birthdate (YYYY-MM-DD):").grid(row=4, column=0, padx=10, pady=5, sticky=tk.E)
-        birthdate = ttk.Entry(tab)
-        birthdate.grid(row=4, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Birthdate (YYYY-MM-DD):").grid(row=5, column=0, sticky=tk.E, padx=5, pady=5)
+        birthdate = ttk.Entry(form_frame)
+        birthdate.grid(row=5, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Tax ID:").grid(row=5, column=0, padx=10, pady=5, sticky=tk.E)
-        tax_id = ttk.Entry(tab)
-        tax_id.grid(row=5, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Tax ID:").grid(row=6, column=0, sticky=tk.E, padx=5, pady=5)
+        tax_id = ttk.Entry(form_frame)
+        tax_id.grid(row=6, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Hired Date (YYYY-MM-DD):").grid(row=6, column=0, padx=10, pady=5, sticky=tk.E)
-        hired_date = ttk.Entry(tab)
-        hired_date.grid(row=6, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Hired Date (YYYY-MM-DD):").grid(row=7, column=0, sticky=tk.E, padx=5, pady=5)
+        hired_date = ttk.Entry(form_frame)
+        hired_date.grid(row=7, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Experience (years):").grid(row=7, column=0, padx=10, pady=5, sticky=tk.E)
-        experience = ttk.Entry(tab)
-        experience.grid(row=7, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Experience (years):").grid(row=8, column=0, sticky=tk.E, padx=5, pady=5)
+        experience = ttk.Entry(form_frame)
+        experience.grid(row=8, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Salary:").grid(row=8, column=0, padx=10, pady=5, sticky=tk.E)
-        salary = ttk.Entry(tab)
-        salary.grid(row=8, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Salary:").grid(row=9, column=0, sticky=tk.E, padx=5, pady=5)
+        salary = ttk.Entry(form_frame)
+        salary.grid(row=9, column=1, padx=5, pady=5)
 
         # Add Employee Function
         def add_employee():
@@ -691,29 +513,34 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Employee", command=add_employee).grid(row=9, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([username, first_name, last_name, address, birthdate, tax_id, hired_date, experience, salary])).grid(row=9, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=10, column=0, columnspan=2, pady=20)
 
-    def add_driver_role_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Driver Role")
+        ttk.Button(button_frame, text="Add Employee", command=add_employee).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username, first_name, last_name, address, birthdate, tax_id, hired_date, experience, salary])).pack(side=tk.RIGHT, padx=5)
+
+    def add_driver_role_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Driver Role", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        username = ttk.Entry(tab)
-        username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        username = ttk.Entry(form_frame)
+        username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="License ID:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        license_id = ttk.Entry(tab)
-        license_id.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="License ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        license_id = ttk.Entry(form_frame)
+        license_id.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="License Type:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        license_type = ttk.Entry(tab)
-        license_type.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="License Type:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        license_type = ttk.Entry(form_frame)
+        license_type.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Driver Experience (trips):").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        driver_experience = ttk.Entry(tab)
-        driver_experience.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Driver Experience (trips):").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        driver_experience = ttk.Entry(form_frame)
+        driver_experience.grid(row=4, column=1, padx=5, pady=5)
 
         # Add Driver Role Function
         def add_driver_role():
@@ -754,17 +581,22 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Driver Role", command=add_driver_role).grid(row=4, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([username, license_id, license_type, driver_experience])).grid(row=4, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
-    def add_worker_role_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Worker Role")
+        ttk.Button(button_frame, text="Add Driver Role", command=add_driver_role).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username, license_id, license_type, driver_experience])).pack(side=tk.RIGHT, padx=5)
+
+    def add_worker_role_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Worker Role", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        username = ttk.Entry(tab)
-        username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        username = ttk.Entry(form_frame)
+        username.grid(row=1, column=1, padx=5, pady=5)
 
         # Add Worker Role Function
         def add_worker_role():
@@ -789,25 +621,30 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Worker Role", command=add_worker_role).grid(row=1, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([username])).grid(row=1, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=2, column=0, columnspan=2, pady=20)
 
-    def add_product_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Product")
+        ttk.Button(button_frame, text="Add Worker Role", command=add_worker_role).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username])).pack(side=tk.RIGHT, padx=5)
+
+    def add_product_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Product", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Barcode:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        barcode = ttk.Entry(tab)
-        barcode.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Barcode:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        barcode = ttk.Entry(form_frame)
+        barcode.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Product Name:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        product_name = ttk.Entry(tab)
-        product_name.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Product Name:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        product_name = ttk.Entry(form_frame)
+        product_name.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Weight:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        weight = ttk.Entry(tab)
-        weight.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Weight:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        weight = ttk.Entry(form_frame)
+        weight.grid(row=3, column=1, padx=5, pady=5)
 
         # Add Product Function
         def add_product():
@@ -846,37 +683,42 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Product", command=add_product).grid(row=3, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([barcode, product_name, weight])).grid(row=3, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=4, column=0, columnspan=2, pady=20)
 
-    def add_van_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Add Van")
+        ttk.Button(button_frame, text="Add Product", command=add_product).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[barcode, product_name, weight])).pack(side=tk.RIGHT, padx=5)
+
+    def add_van_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Add Van", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Tag:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        tag = ttk.Entry(tab)
-        tag.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Tag:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        tag = ttk.Entry(form_frame)
+        tag.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Fuel:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        fuel = ttk.Entry(tab)
-        fuel.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Fuel:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        fuel = ttk.Entry(form_frame)
+        fuel.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Capacity:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        capacity = ttk.Entry(tab)
-        capacity.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Capacity:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        capacity = ttk.Entry(form_frame)
+        capacity.grid(row=4, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Sales:").grid(row=4, column=0, padx=10, pady=5, sticky=tk.E)
-        sales = ttk.Entry(tab)
-        sales.grid(row=4, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Sales:").grid(row=5, column=0, sticky=tk.E, padx=5, pady=5)
+        sales = ttk.Entry(form_frame)
+        sales.grid(row=5, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Driven By (Username):").grid(row=5, column=0, padx=10, pady=5, sticky=tk.E)
-        driven_by = ttk.Entry(tab)
-        driven_by.grid(row=5, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Driven By (Username):").grid(row=6, column=0, sticky=tk.E, padx=5, pady=5)
+        driven_by = ttk.Entry(form_frame)
+        driven_by.grid(row=6, column=1, padx=5, pady=5)
 
         # Add Van Function
         def add_van():
@@ -925,29 +767,34 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Add Van", command=add_van).grid(row=6, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([service_id, tag, fuel, capacity, sales, driven_by])).grid(row=6, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=7, column=0, columnspan=2, pady=20)
 
-    def start_funding_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Start Funding")
+        ttk.Button(button_frame, text="Add Van", command=add_van).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, tag, fuel, capacity, sales, driven_by])).pack(side=tk.RIGHT, padx=5)
+
+    def start_funding_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Start Funding", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Owner Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        owner_username = ttk.Entry(tab)
-        owner_username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Owner Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        owner_username = ttk.Entry(form_frame)
+        owner_username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Amount:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        amount = ttk.Entry(tab)
-        amount.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Amount:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        amount = ttk.Entry(form_frame)
+        amount.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Business Name:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        business_name = ttk.Entry(tab)
-        business_name.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Business Name:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        business_name = ttk.Entry(form_frame)
+        business_name.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Fund Date (YYYY-MM-DD):").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        fund_date = ttk.Entry(tab)
-        fund_date.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Fund Date (YYYY-MM-DD):").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        fund_date = ttk.Entry(form_frame)
+        fund_date.grid(row=4, column=1, padx=5, pady=5)
 
         # Start Funding Function
         def start_funding():
@@ -988,21 +835,26 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Start Funding", command=start_funding).grid(row=4, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([owner_username, amount, business_name, fund_date])).grid(row=4, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
-    def hire_employee_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Hire Employee")
+        ttk.Button(button_frame, text="Start Funding", command=start_funding).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[owner_username, amount, business_name, fund_date])).pack(side=tk.RIGHT, padx=5)
+
+    def hire_employee_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Hire Employee", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Employee Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        employee_username = ttk.Entry(tab)
-        employee_username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Employee Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        employee_username = ttk.Entry(form_frame)
+        employee_username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Service ID:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=2, column=1, padx=5, pady=5)
 
         # Hire Employee Function
         def hire_employee():
@@ -1029,21 +881,26 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Hire Employee", command=hire_employee).grid(row=2, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([employee_username, service_id])).grid(row=2, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=3, column=0, columnspan=2, pady=20)
 
-    def fire_employee_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Fire Employee")
+        ttk.Button(button_frame, text="Hire Employee", command=hire_employee).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[employee_username, service_id])).pack(side=tk.RIGHT, padx=5)
+
+    def fire_employee_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Fire Employee", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Employee Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        employee_username = ttk.Entry(tab)
-        employee_username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Employee Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        employee_username = ttk.Entry(form_frame)
+        employee_username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Service ID:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=2, column=1, padx=5, pady=5)
 
         # Fire Employee Function
         def fire_employee():
@@ -1070,21 +927,26 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Fire Employee", command=fire_employee).grid(row=2, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([employee_username, service_id])).grid(row=2, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=3, column=0, columnspan=2, pady=20)
 
-    def manage_service_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Manage Service")
+        ttk.Button(button_frame, text="Fire Employee", command=fire_employee).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[employee_username, service_id])).pack(side=tk.RIGHT, padx=5)
+
+    def manage_service_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Manage Service", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Employee Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        employee_username = ttk.Entry(tab)
-        employee_username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Employee Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        employee_username = ttk.Entry(form_frame)
+        employee_username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Service ID:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=2, column=1, padx=5, pady=5)
 
         # Manage Service Function
         def manage_service():
@@ -1111,25 +973,30 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Manage Service", command=manage_service).grid(row=2, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([employee_username, service_id])).grid(row=2, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=3, column=0, columnspan=2, pady=20)
 
-    def takeover_van_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Takeover Van")
+        ttk.Button(button_frame, text="Manage Service", command=manage_service).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[employee_username, service_id])).pack(side=tk.RIGHT, padx=5)
+
+    def takeover_van_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Takeover Van", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Driver Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        driver_username = ttk.Entry(tab)
-        driver_username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Driver Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        driver_username = ttk.Entry(form_frame)
+        driver_username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Service ID:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Van Tag:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        van_tag = ttk.Entry(tab)
-        van_tag.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Van Tag:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        van_tag = ttk.Entry(form_frame)
+        van_tag.grid(row=3, column=1, padx=5, pady=5)
 
         # Takeover Van Function
         def takeover_van():
@@ -1168,33 +1035,38 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Takeover Van", command=takeover_van).grid(row=3, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([driver_username, service_id, van_tag])).grid(row=3, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=4, column=0, columnspan=2, pady=20)
 
-    def load_van_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Load Van")
+        ttk.Button(button_frame, text="Takeover Van", command=takeover_van).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[driver_username, service_id, van_tag])).pack(side=tk.RIGHT, padx=5)
+
+    def load_van_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Load Van", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Van Tag:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        van_tag = ttk.Entry(tab)
-        van_tag.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Van Tag:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        van_tag = ttk.Entry(form_frame)
+        van_tag.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Product Barcode:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        product_barcode = ttk.Entry(tab)
-        product_barcode.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Product Barcode:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        product_barcode = ttk.Entry(form_frame)
+        product_barcode.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="More Packages:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        more_packages = ttk.Entry(tab)
-        more_packages.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="More Packages:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        more_packages = ttk.Entry(form_frame)
+        more_packages.grid(row=4, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Price:").grid(row=4, column=0, padx=10, pady=5, sticky=tk.E)
-        price = ttk.Entry(tab)
-        price.grid(row=4, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Price:").grid(row=5, column=0, sticky=tk.E, padx=5, pady=5)
+        price = ttk.Entry(form_frame)
+        price.grid(row=5, column=1, padx=5, pady=5)
 
         # Load Van Function
         def load_van():
@@ -1238,25 +1110,30 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Load Van", command=load_van).grid(row=5, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([service_id, van_tag, product_barcode, more_packages, price])).grid(row=5, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=6, column=0, columnspan=2, pady=20)
 
-    def refuel_van_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Refuel Van")
+        ttk.Button(button_frame, text="Load Van", command=load_van).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag, product_barcode, more_packages, price])).pack(side=tk.RIGHT, padx=5)
+
+    def refuel_van_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Refuel Van", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Van Tag:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        van_tag = ttk.Entry(tab)
-        van_tag.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Van Tag:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        van_tag = ttk.Entry(form_frame)
+        van_tag.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="More Fuel:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        more_fuel = ttk.Entry(tab)
-        more_fuel.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="More Fuel:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        more_fuel = ttk.Entry(form_frame)
+        more_fuel.grid(row=3, column=1, padx=5, pady=5)
 
         # Refuel Van Function
         def refuel_van():
@@ -1295,25 +1172,30 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Refuel Van", command=refuel_van).grid(row=3, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([service_id, van_tag, more_fuel])).grid(row=3, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=4, column=0, columnspan=2, pady=20)
 
-    def drive_van_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Drive Van")
+        ttk.Button(button_frame, text="Refuel Van", command=refuel_van).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag, more_fuel])).pack(side=tk.RIGHT, padx=5)
+
+    def drive_van_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Drive Van", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Van Tag:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        van_tag = ttk.Entry(tab)
-        van_tag.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Van Tag:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        van_tag = ttk.Entry(form_frame)
+        van_tag.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Destination Location:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        destination = ttk.Entry(tab)
-        destination.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Destination Location:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        destination = ttk.Entry(form_frame)
+        destination.grid(row=3, column=1, padx=5, pady=5)
 
         # Drive Van Function
         def drive_van():
@@ -1342,33 +1224,38 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Drive Van", command=drive_van).grid(row=3, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([service_id, van_tag, destination])).grid(row=3, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=4, column=0, columnspan=2, pady=20)
 
-    def purchase_product_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Purchase Product")
+        ttk.Button(button_frame, text="Drive Van", command=drive_van).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag, destination])).pack(side=tk.RIGHT, padx=5)
+
+    def purchase_product_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Purchase Product", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Business Name:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        business_name = ttk.Entry(tab)
-        business_name.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Business Name:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        business_name = ttk.Entry(form_frame)
+        business_name.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Service ID:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=2, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Van Tag:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.E)
-        van_tag = ttk.Entry(tab)
-        van_tag.grid(row=2, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Van Tag:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
+        van_tag = ttk.Entry(form_frame)
+        van_tag.grid(row=3, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Product Barcode:").grid(row=3, column=0, padx=10, pady=5, sticky=tk.E)
-        product_barcode = ttk.Entry(tab)
-        product_barcode.grid(row=3, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Product Barcode:").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
+        product_barcode = ttk.Entry(form_frame)
+        product_barcode.grid(row=4, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Quantity:").grid(row=4, column=0, padx=10, pady=5, sticky=tk.E)
-        quantity = ttk.Entry(tab)
-        quantity.grid(row=4, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Quantity:").grid(row=5, column=0, sticky=tk.E, padx=5, pady=5)
+        quantity = ttk.Entry(form_frame)
+        quantity.grid(row=5, column=1, padx=5, pady=5)
 
         # Purchase Product Function
         def purchase_product():
@@ -1411,17 +1298,22 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Purchase Product", command=purchase_product).grid(row=5, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([business_name, service_id, van_tag, product_barcode, quantity])).grid(row=5, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=6, column=0, columnspan=2, pady=20)
 
-    def remove_product_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Remove Product")
+        ttk.Button(button_frame, text="Purchase Product", command=purchase_product).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[business_name, service_id, van_tag, product_barcode, quantity])).pack(side=tk.RIGHT, padx=5)
+
+    def remove_product_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Remove Product", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Product Barcode:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        product_barcode = ttk.Entry(tab)
-        product_barcode.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Product Barcode:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        product_barcode = ttk.Entry(form_frame)
+        product_barcode.grid(row=1, column=1, padx=5, pady=5)
 
         # Remove Product Function
         def remove_product():
@@ -1446,21 +1338,26 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Remove Product", command=remove_product).grid(row=1, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([product_barcode])).grid(row=1, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=2, column=0, columnspan=2, pady=20)
 
-    def remove_van_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Remove Van")
+        ttk.Button(button_frame, text="Remove Product", command=remove_product).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[product_barcode])).pack(side=tk.RIGHT, padx=5)
+
+    def remove_van_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Remove Van", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Service ID:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        service_id = ttk.Entry(tab)
-        service_id.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Service ID:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        service_id = ttk.Entry(form_frame)
+        service_id.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(tab, text="Van Tag:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.E)
-        van_tag = ttk.Entry(tab)
-        van_tag.grid(row=1, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Van Tag:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+        van_tag = ttk.Entry(form_frame)
+        van_tag.grid(row=2, column=1, padx=5, pady=5)
 
         # Remove Van Function
         def remove_van():
@@ -1497,17 +1394,22 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Remove Van", command=remove_van).grid(row=2, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([service_id, van_tag])).grid(row=2, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=3, column=0, columnspan=2, pady=20)
 
-    def remove_driver_role_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Remove Driver Role")
+        ttk.Button(button_frame, text="Remove Van", command=remove_van).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag])).pack(side=tk.RIGHT, padx=5)
+
+    def remove_driver_role_form(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(form_frame, text="Remove Driver Role", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
         # Input Fields
-        ttk.Label(tab, text="Driver Username:").grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
-        driver_username = ttk.Entry(tab)
-        driver_username.grid(row=0, column=1, padx=10, pady=5)
+        ttk.Label(form_frame, text="Driver Username:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
+        driver_username = ttk.Entry(form_frame)
+        driver_username.grid(row=1, column=1, padx=5, pady=5)
 
         # Remove Driver Role Function
         def remove_driver_role():
@@ -1532,31 +1434,47 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Buttons
-        ttk.Button(tab, text="Remove Driver Role", command=remove_driver_role).grid(row=1, column=1, pady=10, sticky=tk.E)
-        ttk.Button(tab, text="Cancel", command=self.clear_fields([driver_username])).grid(row=1, column=0, pady=10, sticky=tk.W)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(row=2, column=0, columnspan=2, pady=20)
 
-    # -------------------- View Display Tabs --------------------
+        ttk.Button(button_frame, text="Remove Driver Role", command=remove_driver_role).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[driver_username])).pack(side=tk.RIGHT, padx=5)
 
-    def display_owner_view_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Owner View")
+    # -------------------- View Display Methods --------------------
 
-        # Treeview Widget
-        tree = ttk.Treeview(tab, columns=("Username", "First Name", "Last Name", "Address", "Birthdate",
-                                         "Businesses Funded", "Locations", "Highest Rating",
-                                         "Lowest Rating", "Total Debt"), show='headings')
-        tree.heading("Username", text="Username")
-        tree.heading("First Name", text="First Name")
-        tree.heading("Last Name", text="Last Name")
-        tree.heading("Address", text="Address")
-        tree.heading("Birthdate", text="Birthdate")
-        tree.heading("Businesses Funded", text="Businesses Funded")
-        tree.heading("Locations", text="Locations")
-        tree.heading("Highest Rating", text="Highest Rating")
-        tree.heading("Lowest Rating", text="Lowest Rating")
-        tree.heading("Total Debt", text="Total Debt")
+    def display_owner_view(self):
+        display_frame = ttk.Frame(self.right_frame, padding=10)
+        display_frame.pack(fill=tk.BOTH, expand=True)
 
-        tree.pack(expand=True, fill="both")
+        ttk.Label(display_frame, text="Owner View", font=("Helvetica", 16)).pack(pady=10)
+
+        # Create Treeview
+        tree = ttk.Treeview(display_frame, columns=("Username", "First Name", "Last Name", "Address", "Birthdate",
+                                                   "Businesses Funded", "Locations", "Highest Rating",
+                                                   "Lowest Rating", "Total Debt"), show='headings')
+        # Define headings
+        headings = [
+            ("Username", "Username"),
+            ("First Name", "First Name"),
+            ("Last Name", "Last Name"),
+            ("Address", "Address"),
+            ("Birthdate", "Birthdate"),
+            ("Businesses Funded", "Businesses Funded"),
+            ("Locations", "Locations"),
+            ("Highest Rating", "Highest Rating"),
+            ("Lowest Rating", "Lowest Rating"),
+            ("Total Debt", "Total Debt")
+        ]
+        for col, text in headings:
+            tree.heading(col, text=text)
+            tree.column(col, anchor=tk.CENTER, width=120)
+
+        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Load Owner View Data
         def load_owner_view():
@@ -1590,25 +1508,39 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Load Button
-        ttk.Button(tab, text="Load View", command=load_owner_view).pack(pady=10)
+        load_button = ttk.Button(display_frame, text="Load View", command=load_owner_view)
+        load_button.pack(pady=10)
 
-    def display_employee_view_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Employee View")
+    def display_employee_view(self):
+        display_frame = ttk.Frame(self.right_frame, padding=10)
+        display_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Treeview Widget
-        tree = ttk.Treeview(tab, columns=("Username", "Tax ID", "Salary", "Hired Date", "Experience",
-                                         "License ID", "Driver Experience", "Is Manager"), show='headings')
-        tree.heading("Username", text="Username")
-        tree.heading("Tax ID", text="Tax ID")
-        tree.heading("Salary", text="Salary")
-        tree.heading("Hired Date", text="Hired Date")
-        tree.heading("Experience", text="Experience")
-        tree.heading("License ID", text="License ID")
-        tree.heading("Driver Experience", text="Driver Experience")
-        tree.heading("Is Manager", text="Is Manager")
+        ttk.Label(display_frame, text="Employee View", font=("Helvetica", 16)).pack(pady=10)
 
-        tree.pack(expand=True, fill="both")
+        # Create Treeview
+        tree = ttk.Treeview(display_frame, columns=("Username", "Tax ID", "Salary", "Hired Date", "Experience",
+                                                   "License ID", "Driver Experience", "Is Manager"), show='headings')
+        # Define headings
+        headings = [
+            ("Username", "Username"),
+            ("Tax ID", "Tax ID"),
+            ("Salary", "Salary"),
+            ("Hired Date", "Hired Date"),
+            ("Experience", "Experience"),
+            ("License ID", "License ID"),
+            ("Driver Experience", "Driver Experience"),
+            ("Is Manager", "Is Manager")
+        ]
+        for col, text in headings:
+            tree.heading(col, text=text)
+            tree.column(col, anchor=tk.CENTER, width=100)
+
+        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Load Employee View Data
         def load_employee_view():
@@ -1640,20 +1572,34 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Load Button
-        ttk.Button(tab, text="Load View", command=load_employee_view).pack(pady=10)
+        load_button = ttk.Button(display_frame, text="Load View", command=load_employee_view)
+        load_button.pack(pady=10)
 
-    def display_driver_view_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Driver View")
+    def display_driver_view(self):
+        display_frame = ttk.Frame(self.right_frame, padding=10)
+        display_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Treeview Widget
-        tree = ttk.Treeview(tab, columns=("Username", "License ID", "Driving Experience", "Vans Controlled"), show='headings')
-        tree.heading("Username", text="Username")
-        tree.heading("License ID", text="License ID")
-        tree.heading("Driving Experience", text="Driving Experience")
-        tree.heading("Vans Controlled", text="Vans Controlled")
+        ttk.Label(display_frame, text="Driver View", font=("Helvetica", 16)).pack(pady=10)
 
-        tree.pack(expand=True, fill="both")
+        # Create Treeview
+        tree = ttk.Treeview(display_frame, columns=("Username", "License ID", "Driving Experience", "Vans Controlled"), show='headings')
+        # Define headings
+        headings = [
+            ("Username", "Username"),
+            ("License ID", "License ID"),
+            ("Driving Experience", "Driving Experience"),
+            ("Vans Controlled", "Vans Controlled")
+        ]
+        for col, text in headings:
+            tree.heading(col, text=text)
+            tree.column(col, anchor=tk.CENTER, width=150)
+
+        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Load Driver View Data
         def load_driver_view():
@@ -1681,25 +1627,39 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Load Button
-        ttk.Button(tab, text="Load View", command=load_driver_view).pack(pady=10)
+        load_button = ttk.Button(display_frame, text="Load View", command=load_driver_view)
+        load_button.pack(pady=10)
 
-    def display_location_view_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Location View")
+    def display_location_view(self):
+        display_frame = ttk.Frame(self.right_frame, padding=10)
+        display_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Treeview Widget
-        tree = ttk.Treeview(tab, columns=("Label", "X Coord", "Y Coord", "Long Name",
-                                         "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
-        tree.heading("Label", text="Label")
-        tree.heading("X Coord", text="X Coord")
-        tree.heading("Y Coord", text="Y Coord")
-        tree.heading("Long Name", text="Long Name")
-        tree.heading("Number of Vans", text="Number of Vans")
-        tree.heading("Van IDs", text="Van IDs")
-        tree.heading("Capacity", text="Capacity")
-        tree.heading("Remaining Capacity", text="Remaining Capacity")
+        ttk.Label(display_frame, text="Location View", font=("Helvetica", 16)).pack(pady=10)
 
-        tree.pack(expand=True, fill="both")
+        # Create Treeview
+        tree = ttk.Treeview(display_frame, columns=("Label", "X Coord", "Y Coord", "Long Name",
+                                                   "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
+        # Define headings
+        headings = [
+            ("Label", "Label"),
+            ("X Coord", "X Coord"),
+            ("Y Coord", "Y Coord"),
+            ("Long Name", "Long Name"),
+            ("Number of Vans", "Number of Vans"),
+            ("Van IDs", "Van IDs"),
+            ("Capacity", "Capacity"),
+            ("Remaining Capacity", "Remaining Capacity")
+        ]
+        for col, text in headings:
+            tree.heading(col, text=text)
+            tree.column(col, anchor=tk.CENTER, width=120)
+
+        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Load Location View Data
         def load_location_view():
@@ -1731,21 +1691,35 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Load Button
-        ttk.Button(tab, text="Load View", command=load_location_view).pack(pady=10)
+        load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
+        load_button.pack(pady=10)
 
-    def display_product_view_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Product View")
+    def display_product_view(self):
+        display_frame = ttk.Frame(self.right_frame, padding=10)
+        display_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Treeview Widget
-        tree = ttk.Treeview(tab, columns=("Product Name", "Location", "Amount Available", "Low Price", "High Price"), show='headings')
-        tree.heading("Product Name", text="Product Name")
-        tree.heading("Location", text="Location")
-        tree.heading("Amount Available", text="Amount Available")
-        tree.heading("Low Price", text="Low Price")
-        tree.heading("High Price", text="High Price")
+        ttk.Label(display_frame, text="Product View", font=("Helvetica", 16)).pack(pady=10)
 
-        tree.pack(expand=True, fill="both")
+        # Create Treeview
+        tree = ttk.Treeview(display_frame, columns=("Product Name", "Location", "Amount Available", "Low Price", "High Price"), show='headings')
+        # Define headings
+        headings = [
+            ("Product Name", "Product Name"),
+            ("Location", "Location"),
+            ("Amount Available", "Amount Available"),
+            ("Low Price", "Low Price"),
+            ("High Price", "High Price")
+        ]
+        for col, text in headings:
+            tree.heading(col, text=text)
+            tree.column(col, anchor=tk.CENTER, width=120)
+
+        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Load Product View Data
         def load_product_view():
@@ -1774,25 +1748,39 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Load Button
-        ttk.Button(tab, text="Load View", command=load_product_view).pack(pady=10)
+        load_button = ttk.Button(display_frame, text="Load View", command=load_product_view)
+        load_button.pack(pady=10)
 
-    def display_service_view_tab(self, tab_control):
-        tab = ttk.Frame(tab_control)
-        tab_control.add(tab, text="Service View")
+    def display_service_view(self):
+        display_frame = ttk.Frame(self.right_frame, padding=10)
+        display_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Treeview Widget
-        tree = ttk.Treeview(tab, columns=("Service ID", "Service Name", "Home Base", "Manager",
-                                         "Revenue", "Products Carried", "Cost Carried", "Weight Carried"), show='headings')
-        tree.heading("Service ID", text="Service ID")
-        tree.heading("Service Name", text="Service Name")
-        tree.heading("Home Base", text="Home Base")
-        tree.heading("Manager", text="Manager")
-        tree.heading("Revenue", text="Revenue")
-        tree.heading("Products Carried", text="Products Carried")
-        tree.heading("Cost Carried", text="Cost Carried")
-        tree.heading("Weight Carried", text="Weight Carried")
+        ttk.Label(display_frame, text="Service View", font=("Helvetica", 16)).pack(pady=10)
 
-        tree.pack(expand=True, fill="both")
+        # Create Treeview
+        tree = ttk.Treeview(display_frame, columns=("Service ID", "Service Name", "Home Base", "Manager",
+                                                   "Revenue", "Products Carried", "Cost Carried", "Weight Carried"), show='headings')
+        # Define headings
+        headings = [
+            ("Service ID", "Service ID"),
+            ("Service Name", "Service Name"),
+            ("Home Base", "Home Base"),
+            ("Manager", "Manager"),
+            ("Revenue", "Revenue"),
+            ("Products Carried", "Products Carried"),
+            ("Cost Carried", "Cost Carried"),
+            ("Weight Carried", "Weight Carried")
+        ]
+        for col, text in headings:
+            tree.heading(col, text=text)
+            tree.column(col, anchor=tk.CENTER, width=120)
+
+        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        # Add Scrollbar
+        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Load Service View Data
         def load_service_view():
@@ -1824,20 +1812,18 @@ class BusinessSupplyApp:
                     close_db(conn)
 
         # Load Button
-        ttk.Button(tab, text="Load View", command=load_service_view).pack(pady=10)
+        load_button = ttk.Button(display_frame, text="Load View", command=load_service_view)
+        load_button.pack(pady=10)
 
     # -------------------- Utility Methods --------------------
 
     def clear_fields(self, fields):
-        # Returns a function to clear multiple entry fields
-        def clear():
-            for field in fields:
-                field.delete(0, tk.END)
-        return clear
+        for field in fields:
+            field.delete(0, tk.END)
+
 
 # Run the application
 if __name__ == "__main__":
     root = tk.Tk()
     app = BusinessSupplyApp(root)
     root.mainloop()
-
