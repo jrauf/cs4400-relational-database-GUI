@@ -42,7 +42,7 @@ class BusinessSupplyApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Business Supply System")
-        self.root.geometry("1400x800")
+        self.root.geometry("1200x700")
         self.create_widgets()
 
     def create_widgets(self):
@@ -158,6 +158,7 @@ class BusinessSupplyApp:
 
     # -------------------- Stored Procedure Forms --------------------
 
+    # Add Owner
     def add_owner_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -221,6 +222,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Owner", command=add_owner).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[first_name, last_name, username, address, birthdate])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Business
     def add_business_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -298,6 +300,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Business", command=add_business).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[business_name, rating, spent, location])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Service
     def add_service_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -356,6 +359,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Service", command=add_service).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, service_name, home_base, manager])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Location
     def add_location_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -426,6 +430,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Location", command=add_location).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[location_label, x_coord, y_coord, space])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Employee
     def add_employee_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -519,6 +524,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Employee", command=add_employee).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username, first_name, last_name, address, birthdate, tax_id, hired_date, experience, salary])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Driver Role
     def add_driver_role_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -587,6 +593,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Driver Role", command=add_driver_role).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username, license_id, license_type, driver_experience])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Worker Role
     def add_worker_role_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -627,6 +634,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Worker Role", command=add_worker_role).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Product
     def add_product_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -689,6 +697,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Product", command=add_product).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[barcode, product_name, weight])).pack(side=tk.RIGHT, padx=5)
 
+    # Add Van
     def add_van_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -773,6 +782,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Add Van", command=add_van).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, tag, fuel, capacity, sales, driven_by])).pack(side=tk.RIGHT, padx=5)
 
+    # Start Funding
     def start_funding_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -841,6 +851,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Start Funding", command=start_funding).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[owner_username, amount, business_name, fund_date])).pack(side=tk.RIGHT, padx=5)
 
+    # Hire Employee
     def hire_employee_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -887,6 +898,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Hire Employee", command=hire_employee).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[employee_username, service_id])).pack(side=tk.RIGHT, padx=5)
 
+    # Fire Employee
     def fire_employee_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -933,6 +945,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Fire Employee", command=fire_employee).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[employee_username, service_id])).pack(side=tk.RIGHT, padx=5)
 
+    # Manage Service
     def manage_service_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -979,6 +992,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Manage Service", command=manage_service).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[employee_username, service_id])).pack(side=tk.RIGHT, padx=5)
 
+    # Takeover Van
     def takeover_van_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1041,6 +1055,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Takeover Van", command=takeover_van).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[driver_username, service_id, van_tag])).pack(side=tk.RIGHT, padx=5)
 
+    # Load Van
     def load_van_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1116,6 +1131,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Load Van", command=load_van).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag, product_barcode, more_packages, price])).pack(side=tk.RIGHT, padx=5)
 
+    # Refuel Van
     def refuel_van_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1178,6 +1194,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Refuel Van", command=refuel_van).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag, more_fuel])).pack(side=tk.RIGHT, padx=5)
 
+    # Drive Van
     def drive_van_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1230,6 +1247,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Drive Van", command=drive_van).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag, destination])).pack(side=tk.RIGHT, padx=5)
 
+    # Purchase Product
     def purchase_product_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1304,6 +1322,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Purchase Product", command=purchase_product).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[business_name, service_id, van_tag, product_barcode, quantity])).pack(side=tk.RIGHT, padx=5)
 
+    # Remove Product
     def remove_product_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1344,6 +1363,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Remove Product", command=remove_product).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[product_barcode])).pack(side=tk.RIGHT, padx=5)
 
+    # Remove Van
     def remove_van_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1400,6 +1420,7 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Remove Van", command=remove_van).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[service_id, van_tag])).pack(side=tk.RIGHT, padx=5)
 
+    # Remove Driver Role
     def remove_driver_role_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
         form_frame.pack(fill=tk.BOTH, expand=True)
@@ -1440,8 +1461,16 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Remove Driver Role", command=remove_driver_role).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[driver_username])).pack(side=tk.RIGHT, padx=5)
 
-    # -------------------- View Display Methods --------------------
+    # Add Van (if needed, already implemented above)
+    # Start Funding (if needed, already implemented above)
 
+    # Similarly, implement other stored procedure forms here following the same pattern...
+    # For brevity, not all 21 are included in this example.
+    # You should implement each procedure's form following the same structure.
+
+    # -------------------- View Display Tabs --------------------
+
+    # Display Owner View
     def display_owner_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
@@ -1467,7 +1496,7 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
+            tree.column(col, anchor=tk.CENTER)
 
         tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -1511,6 +1540,7 @@ class BusinessSupplyApp:
         load_button = ttk.Button(display_frame, text="Load View", command=load_owner_view)
         load_button.pack(pady=10)
 
+    # Display Employee View
     def display_employee_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
@@ -1533,7 +1563,7 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=100)
+            tree.column(col, anchor=tk.CENTER)
 
         tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -1575,6 +1605,7 @@ class BusinessSupplyApp:
         load_button = ttk.Button(display_frame, text="Load View", command=load_employee_view)
         load_button.pack(pady=10)
 
+    # Display Driver View
     def display_driver_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
@@ -1592,7 +1623,7 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=150)
+            tree.column(col, anchor=tk.CENTER)
 
         tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -1630,6 +1661,7 @@ class BusinessSupplyApp:
         load_button = ttk.Button(display_frame, text="Load View", command=load_driver_view)
         load_button.pack(pady=10)
 
+    # Display Location View
     def display_location_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
@@ -1652,7 +1684,7 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
+            tree.column(col, anchor=tk.CENTER)
 
         tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -1694,6 +1726,7 @@ class BusinessSupplyApp:
         load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
         load_button.pack(pady=10)
 
+    # Display Product View
     def display_product_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
@@ -1712,7 +1745,7 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
+            tree.column(col, anchor=tk.CENTER)
 
         tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -1751,6 +1784,7 @@ class BusinessSupplyApp:
         load_button = ttk.Button(display_frame, text="Load View", command=load_product_view)
         load_button.pack(pady=10)
 
+    # Display Service View
     def display_service_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
@@ -1773,7 +1807,7 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
+            tree.column(col, anchor=tk.CENTER)
 
         tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -1821,6 +1855,11 @@ class BusinessSupplyApp:
         for field in fields:
             field.delete(0, tk.END)
 
+    # -------------------- Additional Stored Procedure Forms --------------------
+    # Implement other stored procedure forms following the same structure as above.
+    # For example: add_van_form, start_funding_form, hire_employee_form, etc.
+    # Due to the length constraints, they are not all included here.
+    # Ensure you implement each stored procedure form with proper input fields and validation.
 
 # Run the application
 if __name__ == "__main__":
