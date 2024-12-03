@@ -113,7 +113,7 @@ class BusinessSupplyApp:
         for view in self.views:
             self.nav_tree.insert(views_node, "end", text=view)
 
-        # Add Scrollbar
+        # Add Scrollbar to Navigation Treeview
         scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
         self.nav_tree.configure(yscroll=scrollbar.set)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -135,19 +135,21 @@ class BusinessSupplyApp:
         if parent_text == "Stored Procedures":
             # Call the corresponding method
             method_name = f"{self.format_method_name(item_text)}_form"
-            method = getattr(self, method_name, None)
-            if method:
+            try:
+                method = getattr(self, method_name)
                 method()
-            else:
-                self.show_message(f"No form implemented for {item_text}")
+            except AttributeError:
+                # If the method doesn't exist, do nothing (as per user request)
+                pass
         elif parent_text == "Views":
             # Call the corresponding method
             method_name = f"display_{self.format_method_name(item_text)}"
-            method = getattr(self, method_name, None)
-            if method:
+            try:
+                method = getattr(self, method_name)
                 method()
-            else:
-                self.show_message(f"No display implemented for {item_text}")
+            except AttributeError:
+                # If the method doesn't exist, do nothing (as per user request)
+                pass
 
     def format_method_name(self, text):
         # Converts text like "Add Owner" to "add_owner"
@@ -204,11 +206,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Owner added successfully.")
                     # Clear all entry fields
-                    first_name.delete(0, tk.END)
-                    last_name.delete(0, tk.END)
-                    username.delete(0, tk.END)
-                    address.delete(0, tk.END)
-                    birthdate.delete(0, tk.END)
+                    self.clear_fields([first_name, last_name, username, address, birthdate])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add owner: {err}")
                     print(f"Stored procedure error: {err}")
@@ -283,10 +281,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Business added successfully.")
                     # Clear all entry fields
-                    business_name.delete(0, tk.END)
-                    rating.delete(0, tk.END)
-                    spent.delete(0, tk.END)
-                    location.delete(0, tk.END)
+                    self.clear_fields([business_name, rating, spent, location])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add business: {err}")
                     print(f"Stored procedure error: {err}")
@@ -342,10 +337,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Service added successfully.")
                     # Clear all entry fields
-                    service_id.delete(0, tk.END)
-                    service_name.delete(0, tk.END)
-                    home_base.delete(0, tk.END)
-                    manager.delete(0, tk.END)
+                    self.clear_fields([service_id, service_name, home_base, manager])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add service: {err}")
                     print(f"Stored procedure error: {err}")
@@ -413,10 +405,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Location added successfully.")
                     # Clear all entry fields
-                    location_label.delete(0, tk.END)
-                    x_coord.delete(0, tk.END)
-                    y_coord.delete(0, tk.END)
-                    space.delete(0, tk.END)
+                    self.clear_fields([location_label, x_coord, y_coord, space])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add location: {err}")
                     print(f"Stored procedure error: {err}")
@@ -509,8 +498,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Employee added successfully.")
                     # Clear all entry fields
-                    for field in fields:
-                        field.delete(0, tk.END)
+                    self.clear_fields([username, first_name, last_name, address, birthdate, tax_id, hired_date, experience, salary])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add employee: {err}")
                     print(f"Stored procedure error: {err}")
@@ -576,10 +564,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Driver role added successfully.")
                     # Clear all entry fields
-                    username.delete(0, tk.END)
-                    license_id.delete(0, tk.END)
-                    license_type.delete(0, tk.END)
-                    driver_experience.delete(0, tk.END)
+                    self.clear_fields([username, license_id, license_type, driver_experience])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add driver role: {err}")
                     print(f"Stored procedure error: {err}")
@@ -620,7 +605,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Worker role added successfully.")
                     # Clear the entry field
-                    username.delete(0, tk.END)
+                    self.clear_fields([username])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add worker role: {err}")
                     print(f"Stored procedure error: {err}")
@@ -681,9 +666,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Product added successfully.")
                     # Clear all entry fields
-                    barcode.delete(0, tk.END)
-                    product_name.delete(0, tk.END)
-                    weight.delete(0, tk.END)
+                    self.clear_fields([barcode, product_name, weight])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add product: {err}")
                     print(f"Stored procedure error: {err}")
@@ -766,9 +749,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Van added successfully.")
                     # Clear all entry fields
-                    for field in fields:
-                        field.delete(0, tk.END)
-                    driven_by.delete(0, tk.END)
+                    self.clear_fields([service_id, tag, fuel, capacity, sales, driven_by])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to add van: {err}")
                     print(f"Stored procedure error: {err}")
@@ -834,10 +815,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Funding started successfully.")
                     # Clear all entry fields
-                    owner_username.delete(0, tk.END)
-                    amount.delete(0, tk.END)
-                    business_name.delete(0, tk.END)
-                    fund_date.delete(0, tk.END)
+                    self.clear_fields([owner_username, amount, business_name, fund_date])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to start funding: {err}")
                     print(f"Stored procedure error: {err}")
@@ -883,8 +861,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Employee hired successfully.")
                     # Clear all entry fields
-                    employee_username.delete(0, tk.END)
-                    service_id.delete(0, tk.END)
+                    self.clear_fields([employee_username, service_id])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to hire employee: {err}")
                     print(f"Stored procedure error: {err}")
@@ -930,8 +907,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Employee fired successfully.")
                     # Clear all entry fields
-                    employee_username.delete(0, tk.END)
-                    service_id.delete(0, tk.END)
+                    self.clear_fields([employee_username, service_id])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to fire employee: {err}")
                     print(f"Stored procedure error: {err}")
@@ -977,8 +953,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Service managed successfully.")
                     # Clear all entry fields
-                    employee_username.delete(0, tk.END)
-                    service_id.delete(0, tk.END)
+                    self.clear_fields([employee_username, service_id])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to manage service: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1039,9 +1014,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Van takeover successful.")
                     # Clear all entry fields
-                    driver_username.delete(0, tk.END)
-                    service_id.delete(0, tk.END)
-                    van_tag.delete(0, tk.END)
+                    self.clear_fields([driver_username, service_id, van_tag])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to takeover van: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1113,11 +1086,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Van loaded successfully.")
                     # Clear all entry fields
-                    service_id.delete(0, tk.END)
-                    van_tag.delete(0, tk.END)
-                    product_barcode.delete(0, tk.END)
-                    more_packages.delete(0, tk.END)
-                    price.delete(0, tk.END)
+                    self.clear_fields([service_id, van_tag, product_barcode, more_packages, price])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to load van: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1178,9 +1147,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Van refueled successfully.")
                     # Clear all entry fields
-                    service_id.delete(0, tk.END)
-                    van_tag.delete(0, tk.END)
-                    more_fuel.delete(0, tk.END)
+                    self.clear_fields([service_id, van_tag, more_fuel])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to refuel van: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1231,9 +1198,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Van driven successfully.")
                     # Clear all entry fields
-                    service_id.delete(0, tk.END)
-                    van_tag.delete(0, tk.END)
-                    destination.delete(0, tk.END)
+                    self.clear_fields([service_id, van_tag, destination])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to drive van: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1304,11 +1269,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Product purchased successfully.")
                     # Clear all entry fields
-                    business_name.delete(0, tk.END)
-                    service_id.delete(0, tk.END)
-                    van_tag.delete(0, tk.END)
-                    product_barcode.delete(0, tk.END)
-                    quantity.delete(0, tk.END)
+                    self.clear_fields([business_name, service_id, van_tag, product_barcode, quantity])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to purchase product: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1349,7 +1310,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Product removed successfully.")
                     # Clear the entry field
-                    product_barcode.delete(0, tk.END)
+                    self.clear_fields([product_barcode])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to remove product: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1405,8 +1366,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Van removed successfully.")
                     # Clear all entry fields
-                    service_id.delete(0, tk.END)
-                    van_tag.delete(0, tk.END)
+                    self.clear_fields([service_id, van_tag])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to remove van: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1447,7 +1407,7 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Driver role removed successfully.")
                     # Clear the entry field
-                    driver_username.delete(0, tk.END)
+                    self.clear_fields([driver_username])
                 except mysql.connector.Error as err:
                     messagebox.showerror("Error", f"Failed to remove driver role: {err}")
                     print(f"Stored procedure error: {err}")
@@ -1461,13 +1421,6 @@ class BusinessSupplyApp:
         ttk.Button(button_frame, text="Remove Driver Role", command=remove_driver_role).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[driver_username])).pack(side=tk.RIGHT, padx=5)
 
-    # Add Van (if needed, already implemented above)
-    # Start Funding (if needed, already implemented above)
-
-    # Similarly, implement other stored procedure forms here following the same pattern...
-    # For brevity, not all 21 are included in this example.
-    # You should implement each procedure's form following the same structure.
-
     # -------------------- View Display Tabs --------------------
 
     # Display Owner View
@@ -1477,10 +1430,15 @@ class BusinessSupplyApp:
 
         ttk.Label(display_frame, text="Owner View", font=("Helvetica", 16)).pack(pady=10)
 
+        # Create a Frame to hold Treeview and Scrollbars
+        tree_frame = ttk.Frame(display_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Username", "First Name", "Last Name", "Address", "Birthdate",
-                                                   "Businesses Funded", "Locations", "Highest Rating",
-                                                   "Lowest Rating", "Total Debt"), show='headings')
+        tree = ttk.Treeview(tree_frame, columns=("Username", "First Name", "Last Name", "Address", "Birthdate",
+                                               "Businesses Funded", "Locations", "Highest Rating",
+                                               "Lowest Rating", "Total Debt"), show='headings')
+
         # Define headings
         headings = [
             ("Username", "Username"),
@@ -1496,14 +1454,24 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER)
+            tree.column(col, anchor=tk.CENTER, width=120, stretch=True)  # Adjust width as needed
 
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        # Enable selection mode
+        tree.configure(selectmode="browse")  # Options: 'browse', 'extended'
 
-        # Add Scrollbar
-        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Add Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        # Position Treeview and Scrollbars in the grid
+        tree.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
+
+        # Configure grid weights to make Treeview expandable
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         # Load Owner View Data
         def load_owner_view():
@@ -1516,29 +1484,32 @@ class BusinessSupplyApp:
                     # Clear existing data
                     for item in tree.get_children():
                         tree.delete(item)
-                    # Insert new data
-                    for row in rows:
-                        tree.insert("", tk.END, values=(
-                            row.get("username"),
-                            row.get("first_name"),
-                            row.get("last_name"),
-                            row.get("address"),
-                            row.get("birthdate"),
-                            row.get("businesses_funded"),
-                            row.get("locations"),
-                            row.get("highest_rating"),
-                            row.get("lowest_rating"),
-                            row.get("total_debt")
-                        ))
+                    if not rows:
+                        messagebox.showinfo("No Data", "No data available in Owner View.")
+                    else:
+                        # Insert new data
+                        for row in rows:
+                            tree.insert("", tk.END, values=(
+                                row.get("username", ""),
+                                row.get("first_name", ""),
+                                row.get("last_name", ""),
+                                row.get("address", ""),
+                                row.get("birthdate", ""),
+                                row.get("businesses_funded", ""),
+                                row.get("locations", ""),
+                                row.get("highest_rating", ""),
+                                row.get("lowest_rating", ""),
+                                row.get("total_debt", "")
+                            ))
                 except mysql.connector.Error as err:
-                    messagebox.showerror("Error", f"Failed to load owner view: {err}")
+                    messagebox.showerror("Error", f"Failed to load Owner View: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
 
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_owner_view)
-        load_button.pack(pady=10)
+        load_button.pack(pady=10, anchor='e')  # Positioned at the bottom-right
 
     # Display Employee View
     def display_employee_view(self):
@@ -1547,9 +1518,14 @@ class BusinessSupplyApp:
 
         ttk.Label(display_frame, text="Employee View", font=("Helvetica", 16)).pack(pady=10)
 
+        # Create a Frame to hold Treeview and Scrollbars
+        tree_frame = ttk.Frame(display_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Username", "Tax ID", "Salary", "Hired Date", "Experience",
-                                                   "License ID", "Driver Experience", "Is Manager"), show='headings')
+        tree = ttk.Treeview(tree_frame, columns=("Username", "Tax ID", "Salary", "Hired Date", "Experience",
+                                               "License ID", "Driver Experience", "Is Manager"), show='headings')
+
         # Define headings
         headings = [
             ("Username", "Username"),
@@ -1563,14 +1539,24 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER)
+            tree.column(col, anchor=tk.CENTER, width=120, stretch=True)  # Adjust width as needed
 
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        # Enable selection mode
+        tree.configure(selectmode="browse")  # Options: 'browse', 'extended'
 
-        # Add Scrollbar
-        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Add Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        # Position Treeview and Scrollbars in the grid
+        tree.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
+
+        # Configure grid weights to make Treeview expandable
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         # Load Employee View Data
         def load_employee_view():
@@ -1583,27 +1569,30 @@ class BusinessSupplyApp:
                     # Clear existing data
                     for item in tree.get_children():
                         tree.delete(item)
-                    # Insert new data
-                    for row in rows:
-                        tree.insert("", tk.END, values=(
-                            row.get("username"),
-                            row.get("tax_identifier"),
-                            row.get("salary"),
-                            row.get("hiring_date"),
-                            row.get("experience_level"),
-                            row.get("license_identifier"),
-                            row.get("drivering_experience"),
-                            row.get("is_manager")
-                        ))
+                    if not rows:
+                        messagebox.showinfo("No Data", "No data available in Employee View.")
+                    else:
+                        # Insert new data
+                        for row in rows:
+                            tree.insert("", tk.END, values=(
+                                row.get("username", ""),
+                                row.get("tax_identifier", ""),
+                                row.get("salary", ""),
+                                row.get("hiring_date", ""),
+                                row.get("experience_level", ""),
+                                row.get("license_identifier", ""),
+                                row.get("drivering_experience", ""),
+                                row.get("is_manager", "")
+                            ))
                 except mysql.connector.Error as err:
-                    messagebox.showerror("Error", f"Failed to load employee view: {err}")
+                    messagebox.showerror("Error", f"Failed to load Employee View: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
 
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_employee_view)
-        load_button.pack(pady=10)
+        load_button.pack(pady=10, anchor='e')  # Positioned at the bottom-right
 
     # Display Driver View
     def display_driver_view(self):
@@ -1612,8 +1601,13 @@ class BusinessSupplyApp:
 
         ttk.Label(display_frame, text="Driver View", font=("Helvetica", 16)).pack(pady=10)
 
+        # Create a Frame to hold Treeview and Scrollbars
+        tree_frame = ttk.Frame(display_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Username", "License ID", "Driving Experience", "Vans Controlled"), show='headings')
+        tree = ttk.Treeview(tree_frame, columns=("Username", "License ID", "Driving Experience", "Vans Controlled"), show='headings')
+
         # Define headings
         headings = [
             ("Username", "Username"),
@@ -1623,14 +1617,24 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER)
+            tree.column(col, anchor=tk.CENTER, width=150, stretch=True)  # Adjust width as needed
 
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        # Enable selection mode
+        tree.configure(selectmode="browse")  # Options: 'browse', 'extended'
 
-        # Add Scrollbar
-        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Add Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        # Position Treeview and Scrollbars in the grid
+        tree.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
+
+        # Configure grid weights to make Treeview expandable
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         # Load Driver View Data
         def load_driver_view():
@@ -1643,23 +1647,26 @@ class BusinessSupplyApp:
                     # Clear existing data
                     for item in tree.get_children():
                         tree.delete(item)
-                    # Insert new data
-                    for row in rows:
-                        tree.insert("", tk.END, values=(
-                            row.get("username"),
-                            row.get("licenseID"),
-                            row.get("drivering_experience"),
-                            row.get("vans_controlled")
-                        ))
+                    if not rows:
+                        messagebox.showinfo("No Data", "No data available in Driver View.")
+                    else:
+                        # Insert new data
+                        for row in rows:
+                            tree.insert("", tk.END, values=(
+                                row.get("username", ""),
+                                row.get("licenseID", ""),
+                                row.get("drivering_experience", ""),
+                                row.get("vans_controlled", "")
+                            ))
                 except mysql.connector.Error as err:
-                    messagebox.showerror("Error", f"Failed to load driver view: {err}")
+                    messagebox.showerror("Error", f"Failed to load Driver View: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
 
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_driver_view)
-        load_button.pack(pady=10)
+        load_button.pack(pady=10, anchor='e')  # Positioned at the bottom-right
 
     # Display Location View
     def display_location_view(self):
@@ -1668,9 +1675,14 @@ class BusinessSupplyApp:
 
         ttk.Label(display_frame, text="Location View", font=("Helvetica", 16)).pack(pady=10)
 
+        # Create a Frame to hold Treeview and Scrollbars
+        tree_frame = ttk.Frame(display_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Label", "X Coord", "Y Coord", "Long Name",
-                                                   "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
+        tree = ttk.Treeview(tree_frame, columns=("Label", "X Coord", "Y Coord", "Long Name",
+                                               "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
+
         # Define headings
         headings = [
             ("Label", "Label"),
@@ -1684,14 +1696,24 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER)
+            tree.column(col, anchor=tk.CENTER, width=120, stretch=True)  # Adjust width as needed
 
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        # Enable selection mode
+        tree.configure(selectmode="browse")  # Options: 'browse', 'extended'
 
-        # Add Scrollbar
-        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Add Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        # Position Treeview and Scrollbars in the grid
+        tree.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
+
+        # Configure grid weights to make Treeview expandable
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         # Load Location View Data
         def load_location_view():
@@ -1704,27 +1726,30 @@ class BusinessSupplyApp:
                     # Clear existing data
                     for item in tree.get_children():
                         tree.delete(item)
-                    # Insert new data
-                    for row in rows:
-                        tree.insert("", tk.END, values=(
-                            row.get("label"),
-                            row.get("x_coord"),
-                            row.get("y_coord"),
-                            row.get("long_name"),
-                            row.get("num_vans"),
-                            row.get("van_ids"),
-                            row.get("capacity"),
-                            row.get("remaining_capacity")
-                        ))
+                    if not rows:
+                        messagebox.showinfo("No Data", "No data available in Location View.")
+                    else:
+                        # Insert new data
+                        for row in rows:
+                            tree.insert("", tk.END, values=(
+                                row.get("label", ""),
+                                row.get("x_coord", ""),
+                                row.get("y_coord", ""),
+                                row.get("long_name", ""),
+                                row.get("num_vans", ""),
+                                row.get("van_ids", ""),
+                                row.get("capacity", ""),
+                                row.get("remaining_capacity", "")
+                            ))
                 except mysql.connector.Error as err:
-                    messagebox.showerror("Error", f"Failed to load location view: {err}")
+                    messagebox.showerror("Error", f"Failed to load Location View: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
 
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
-        load_button.pack(pady=10)
+        load_button.pack(pady=10, anchor='e')  # Positioned at the bottom-right
 
     # Display Product View
     def display_product_view(self):
@@ -1733,8 +1758,13 @@ class BusinessSupplyApp:
 
         ttk.Label(display_frame, text="Product View", font=("Helvetica", 16)).pack(pady=10)
 
+        # Create a Frame to hold Treeview and Scrollbars
+        tree_frame = ttk.Frame(display_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Product Name", "Location", "Amount Available", "Low Price", "High Price"), show='headings')
+        tree = ttk.Treeview(tree_frame, columns=("Product Name", "Location", "Amount Available", "Low Price", "High Price"), show='headings')
+
         # Define headings
         headings = [
             ("Product Name", "Product Name"),
@@ -1745,14 +1775,24 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER)
+            tree.column(col, anchor=tk.CENTER, width=150, stretch=True)  # Adjust width as needed
 
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        # Enable selection mode
+        tree.configure(selectmode="browse")  # Options: 'browse', 'extended'
 
-        # Add Scrollbar
-        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Add Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        # Position Treeview and Scrollbars in the grid
+        tree.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
+
+        # Configure grid weights to make Treeview expandable
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         # Load Product View Data
         def load_product_view():
@@ -1765,24 +1805,27 @@ class BusinessSupplyApp:
                     # Clear existing data
                     for item in tree.get_children():
                         tree.delete(item)
-                    # Insert new data
-                    for row in rows:
-                        tree.insert("", tk.END, values=(
-                            row.get("product_name"),
-                            row.get("located_at"),
-                            row.get("amount_available"),
-                            row.get("low_price"),
-                            row.get("high_price")
-                        ))
+                    if not rows:
+                        messagebox.showinfo("No Data", "No data available in Product View.")
+                    else:
+                        # Insert new data
+                        for row in rows:
+                            tree.insert("", tk.END, values=(
+                                row.get("product_name", ""),
+                                row.get("located_at", ""),
+                                row.get("amount_available", ""),
+                                row.get("low_price", ""),
+                                row.get("high_price", "")
+                            ))
                 except mysql.connector.Error as err:
-                    messagebox.showerror("Error", f"Failed to load product view: {err}")
+                    messagebox.showerror("Error", f"Failed to load Product View: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
 
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_product_view)
-        load_button.pack(pady=10)
+        load_button.pack(pady=10, anchor='e')  # Positioned at the bottom-right
 
     # Display Service View
     def display_service_view(self):
@@ -1791,9 +1834,14 @@ class BusinessSupplyApp:
 
         ttk.Label(display_frame, text="Service View", font=("Helvetica", 16)).pack(pady=10)
 
+        # Create a Frame to hold Treeview and Scrollbars
+        tree_frame = ttk.Frame(display_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Service ID", "Service Name", "Home Base", "Manager",
-                                                   "Revenue", "Products Carried", "Cost Carried", "Weight Carried"), show='headings')
+        tree = ttk.Treeview(tree_frame, columns=("Service ID", "Service Name", "Home Base", "Manager",
+                                               "Revenue", "Products Carried", "Cost Carried", "Weight Carried"), show='headings')
+
         # Define headings
         headings = [
             ("Service ID", "Service ID"),
@@ -1807,14 +1855,24 @@ class BusinessSupplyApp:
         ]
         for col, text in headings:
             tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER)
+            tree.column(col, anchor=tk.CENTER, width=120, stretch=True)  # Adjust width as needed
 
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        # Enable selection mode
+        tree.configure(selectmode="browse")  # Options: 'browse', 'extended'
 
-        # Add Scrollbar
-        scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Add Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        # Position Treeview and Scrollbars in the grid
+        tree.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
+
+        # Configure grid weights to make Treeview expandable
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         # Load Service View Data
         def load_service_view():
@@ -1827,27 +1885,30 @@ class BusinessSupplyApp:
                     # Clear existing data
                     for item in tree.get_children():
                         tree.delete(item)
-                    # Insert new data
-                    for row in rows:
-                        tree.insert("", tk.END, values=(
-                            row.get("id"),
-                            row.get("long_name"),
-                            row.get("home_base"),
-                            row.get("manager"),
-                            row.get("revenue"),
-                            row.get("products_carried"),
-                            row.get("cost_carried"),
-                            row.get("weight_carried")
-                        ))
+                    if not rows:
+                        messagebox.showinfo("No Data", "No data available in Service View.")
+                    else:
+                        # Insert new data
+                        for row in rows:
+                            tree.insert("", tk.END, values=(
+                                row.get("id", ""),
+                                row.get("long_name", ""),
+                                row.get("home_base", ""),
+                                row.get("manager", ""),
+                                row.get("revenue", ""),
+                                row.get("products_carried", ""),
+                                row.get("cost_carried", ""),
+                                row.get("weight_carried", "")
+                            ))
                 except mysql.connector.Error as err:
-                    messagebox.showerror("Error", f"Failed to load service view: {err}")
+                    messagebox.showerror("Error", f"Failed to load Service View: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
 
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_service_view)
-        load_button.pack(pady=10)
+        load_button.pack(pady=10, anchor='e')  # Positioned at the bottom-right
 
     # -------------------- Utility Methods --------------------
 
@@ -1856,10 +1917,10 @@ class BusinessSupplyApp:
             field.delete(0, tk.END)
 
     # -------------------- Additional Stored Procedure Forms --------------------
-    # Implement other stored procedure forms following the same structure as above.
-    # For example: add_van_form, start_funding_form, hire_employee_form, etc.
-    # Due to the length constraints, they are not all included here.
-    # Ensure you implement each stored procedure form with proper input fields and validation.
+    # All stored procedures have been implemented above.
+
+    # -------------------- Additional Views --------------------
+    # All views have been implemented above.
 
 # Run the application
 if __name__ == "__main__":
