@@ -1444,39 +1444,37 @@ class BusinessSupplyApp:
     # -------------------- View Display Methods --------------------
 
     def display_owner_view(self):
+    # Create a frame for the Owner View
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
-        ttk.Label(display_frame, text="Owner View", font=("Helvetica", 16)).pack(pady=10)
-
+        
+        # Configure grid layout
+        display_frame.grid_rowconfigure(1, weight=1)
+        display_frame.grid_columnconfigure(0, weight=1)
+        
+        # Label for the View
+        label = ttk.Label(display_frame, text="Owner View", font=("Helvetica", 16))
+        label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky='w')
+        
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Username", "First Name", "Last Name", "Address", "Birthdate",
-                                                   "Businesses Funded", "Locations", "Highest Rating",
-                                                   "Lowest Rating", "Total Debt"), show='headings')
+        columns = ("Username", "First Name", "Last Name", "Address", "Birthdate",
+                "Businesses Funded", "Locations", "Highest Rating",
+                "Lowest Rating", "Total Debt")
+        tree = ttk.Treeview(display_frame, columns=columns, show='headings')
+        
         # Define headings
-        headings = [
-            ("Username", "Username"),
-            ("First Name", "First Name"),
-            ("Last Name", "Last Name"),
-            ("Address", "Address"),
-            ("Birthdate", "Birthdate"),
-            ("Businesses Funded", "Businesses Funded"),
-            ("Locations", "Locations"),
-            ("Highest Rating", "Highest Rating"),
-            ("Lowest Rating", "Lowest Rating"),
-            ("Total Debt", "Total Debt")
-        ]
-        for col, text in headings:
-            tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
-
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        # Add Scrollbar
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor=tk.CENTER, width=100, minwidth=80, stretch=True)
+        
+        # Place Treeview in the grid
+        tree.grid(row=1, column=0, sticky='nsew')
+        
+        # Add vertical scrollbar to Treeview
         scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
+        scrollbar.grid(row=1, column=1, sticky='ns')
+        
         # Load Owner View Data
         def load_owner_view():
             conn = connect_db()
@@ -1507,42 +1505,44 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_owner_view)
-        load_button.pack(pady=10)
+        load_button.grid(row=2, column=0, columnspan=2, pady=10, sticky='e')
 
     def display_employee_view(self):
+    # Create a frame for the Employee View
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
-        ttk.Label(display_frame, text="Employee View", font=("Helvetica", 16)).pack(pady=10)
-
+        
+        # Configure grid layout
+        display_frame.grid_rowconfigure(1, weight=1)  # Make row 1 expandable
+        display_frame.grid_columnconfigure(0, weight=1)  # Make column 0 expandable
+        
+        # Label for the View
+        label = ttk.Label(display_frame, text="Employee View", font=("Helvetica", 16))
+        label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky='w')
+        
+        # Define Treeview columns
+        columns = ("Username", "Tax ID", "Salary", "Hired Date", "Experience",
+                "License ID", "Driver Experience", "Is Manager")
+        
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Username", "Tax ID", "Salary", "Hired Date", "Experience",
-                                                   "License ID", "Driver Experience", "Is Manager"), show='headings')
-        # Define headings
-        headings = [
-            ("Username", "Username"),
-            ("Tax ID", "Tax ID"),
-            ("Salary", "Salary"),
-            ("Hired Date", "Hired Date"),
-            ("Experience", "Experience"),
-            ("License ID", "License ID"),
-            ("Driver Experience", "Driver Experience"),
-            ("Is Manager", "Is Manager")
-        ]
-        for col, text in headings:
-            tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=100)
-
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        # Add Scrollbar
+        tree = ttk.Treeview(display_frame, columns=columns, show='headings')
+        
+        # Define headings and configure column properties
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor=tk.CENTER, width=100, minwidth=80, stretch=True)
+        
+        # Place Treeview in the grid
+        tree.grid(row=1, column=0, sticky='nsew', padx=(0, 10), pady=10)
+        
+        # Add vertical scrollbar to Treeview
         scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
+        scrollbar.grid(row=1, column=1, sticky='ns', pady=10)
+        
         # Load Employee View Data
         def load_employee_view():
             conn = connect_db()
@@ -1571,37 +1571,43 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_employee_view)
-        load_button.pack(pady=10)
+        load_button.grid(row=2, column=0, columnspan=2, pady=10, sticky='e')
 
     def display_driver_view(self):
+    # Create a frame for the Driver View
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
-        ttk.Label(display_frame, text="Driver View", font=("Helvetica", 16)).pack(pady=10)
-
+        
+        # Configure grid layout
+        display_frame.grid_rowconfigure(1, weight=1)  # Make row 1 expandable
+        display_frame.grid_columnconfigure(0, weight=1)  # Make column 0 expandable
+        
+        # Label for the View
+        label = ttk.Label(display_frame, text="Driver View", font=("Helvetica", 16))
+        label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky='w')
+        
+        # Define Treeview columns
+        columns = ("Username", "License ID", "Driving Experience", "Vans Controlled")
+        
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Username", "License ID", "Driving Experience", "Vans Controlled"), show='headings')
-        # Define headings
-        headings = [
-            ("Username", "Username"),
-            ("License ID", "License ID"),
-            ("Driving Experience", "Driving Experience"),
-            ("Vans Controlled", "Vans Controlled")
-        ]
-        for col, text in headings:
-            tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=150)
-
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        # Add Scrollbar
+        tree = ttk.Treeview(display_frame, columns=columns, show='headings')
+        
+        # Define headings and configure column properties
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor=tk.CENTER, width=150, minwidth=100, stretch=True)
+        
+        # Place Treeview in the grid
+        tree.grid(row=1, column=0, sticky='nsew', padx=(0, 10), pady=10)
+        
+        # Add vertical scrollbar to Treeview
         scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
+        scrollbar.grid(row=1, column=1, sticky='ns', pady=10)
+        
         # Load Driver View Data
         def load_driver_view():
             conn = connect_db()
@@ -1626,42 +1632,44 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_driver_view)
-        load_button.pack(pady=10)
+        load_button.grid(row=2, column=0, columnspan=2, pady=10, sticky='e')
 
     def display_location_view(self):
+    # Create a frame for the Location View
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
-        ttk.Label(display_frame, text="Location View", font=("Helvetica", 16)).pack(pady=10)
-
+        
+        # Configure grid layout
+        display_frame.grid_rowconfigure(1, weight=1)  # Make row 1 expandable
+        display_frame.grid_columnconfigure(0, weight=1)  # Make column 0 expandable
+        
+        # Label for the View
+        label = ttk.Label(display_frame, text="Location View", font=("Helvetica", 16))
+        label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky='w')
+        
+        # Define Treeview columns
+        columns = ("Label", "X Coord", "Y Coord", "Long Name",
+                "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity")
+        
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Label", "X Coord", "Y Coord", "Long Name",
-                                                   "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
-        # Define headings
-        headings = [
-            ("Label", "Label"),
-            ("X Coord", "X Coord"),
-            ("Y Coord", "Y Coord"),
-            ("Long Name", "Long Name"),
-            ("Number of Vans", "Number of Vans"),
-            ("Van IDs", "Van IDs"),
-            ("Capacity", "Capacity"),
-            ("Remaining Capacity", "Remaining Capacity")
-        ]
-        for col, text in headings:
-            tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
-
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        # Add Scrollbar
+        tree = ttk.Treeview(display_frame, columns=columns, show='headings')
+        
+        # Define headings and configure column properties
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor=tk.CENTER, width=100, minwidth=80, stretch=True)
+        
+        # Place Treeview in the grid
+        tree.grid(row=1, column=0, sticky='nsew', padx=(0, 10), pady=10)
+        
+        # Add vertical scrollbar to Treeview
         scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
+        scrollbar.grid(row=1, column=1, sticky='ns', pady=10)
+        
         # Load Location View Data
         def load_location_view():
             conn = connect_db()
@@ -1690,38 +1698,43 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
-        load_button.pack(pady=10)
+        load_button.grid(row=2, column=0, columnspan=2, pady=10, sticky='e')
 
     def display_product_view(self):
+    # Create a frame for the Product View
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
-        ttk.Label(display_frame, text="Product View", font=("Helvetica", 16)).pack(pady=10)
-
+        
+        # Configure grid layout
+        display_frame.grid_rowconfigure(1, weight=1)  # Make row 1 expandable
+        display_frame.grid_columnconfigure(0, weight=1)  # Make column 0 expandable
+        
+        # Label for the View
+        label = ttk.Label(display_frame, text="Product View", font=("Helvetica", 16))
+        label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky='w')
+        
+        # Define Treeview columns
+        columns = ("Product Name", "Location", "Amount Available", "Low Price", "High Price")
+        
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Product Name", "Location", "Amount Available", "Low Price", "High Price"), show='headings')
-        # Define headings
-        headings = [
-            ("Product Name", "Product Name"),
-            ("Location", "Location"),
-            ("Amount Available", "Amount Available"),
-            ("Low Price", "Low Price"),
-            ("High Price", "High Price")
-        ]
-        for col, text in headings:
-            tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
-
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        # Add Scrollbar
+        tree = ttk.Treeview(display_frame, columns=columns, show='headings')
+        
+        # Define headings and configure column properties
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor=tk.CENTER, width=120, minwidth=100, stretch=True)
+        
+        # Place Treeview in the grid
+        tree.grid(row=1, column=0, sticky='nsew', padx=(0, 10), pady=10)
+        
+        # Add vertical scrollbar to Treeview
         scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
+        scrollbar.grid(row=1, column=1, sticky='ns', pady=10)
+        
         # Load Product View Data
         def load_product_view():
             conn = connect_db()
@@ -1747,42 +1760,44 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_product_view)
-        load_button.pack(pady=10)
+        load_button.grid(row=2, column=0, columnspan=2, pady=10, sticky='e')
 
     def display_service_view(self):
+    # Create a frame for the Service View
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
-        ttk.Label(display_frame, text="Service View", font=("Helvetica", 16)).pack(pady=10)
-
+        
+        # Configure grid layout
+        display_frame.grid_rowconfigure(1, weight=1)  # Make row 1 expandable
+        display_frame.grid_columnconfigure(0, weight=1)  # Make column 0 expandable
+        
+        # Label for the View
+        label = ttk.Label(display_frame, text="Service View", font=("Helvetica", 16))
+        label.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky='w')
+        
+        # Define Treeview columns
+        columns = ("Service ID", "Service Name", "Home Base", "Manager",
+                "Revenue", "Products Carried", "Cost Carried", "Weight Carried")
+        
         # Create Treeview
-        tree = ttk.Treeview(display_frame, columns=("Service ID", "Service Name", "Home Base", "Manager",
-                                                   "Revenue", "Products Carried", "Cost Carried", "Weight Carried"), show='headings')
-        # Define headings
-        headings = [
-            ("Service ID", "Service ID"),
-            ("Service Name", "Service Name"),
-            ("Home Base", "Home Base"),
-            ("Manager", "Manager"),
-            ("Revenue", "Revenue"),
-            ("Products Carried", "Products Carried"),
-            ("Cost Carried", "Cost Carried"),
-            ("Weight Carried", "Weight Carried")
-        ]
-        for col, text in headings:
-            tree.heading(col, text=text)
-            tree.column(col, anchor=tk.CENTER, width=120)
-
-        tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        # Add Scrollbar
+        tree = ttk.Treeview(display_frame, columns=columns, show='headings')
+        
+        # Define headings and configure column properties
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor=tk.CENTER, width=100, minwidth=80, stretch=True)
+        
+        # Place Treeview in the grid
+        tree.grid(row=1, column=0, sticky='nsew', padx=(0, 10), pady=10)
+        
+        # Add vertical scrollbar to Treeview
         scrollbar = ttk.Scrollbar(display_frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
+        scrollbar.grid(row=1, column=1, sticky='ns', pady=10)
+        
         # Load Service View Data
         def load_service_view():
             conn = connect_db()
@@ -1811,10 +1826,10 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_service_view)
-        load_button.pack(pady=10)
+        load_button.grid(row=2, column=0, columnspan=2, pady=10, sticky='e')
 
     # -------------------- Utility Methods --------------------
 
