@@ -18,6 +18,6 @@ i & ii:  1. open RDGUI.py in text editor of choice.
 iii: pymysql, to connect python to sql database, tkinter for all GUI functionality. The application was accomplished by connecting python to sql database using pymysql, 
       structuring GUI skeleton for all necessary procedures and views, filling skeleton with functionality, and finally beautifying.
 
-iv. Work was distirbuted by skeleton creation and structuring (1 member) and functionality, filling in procedure skeleton with function, including testing (3 members). All worked on beautifcation at the end.
+iv. Work was distirbuted by skeleton creation and structuring (1 member) and functionality, filling in procedure skeleton with function, including testing (3 members). All worked on beautification at the end.
                 
                  
