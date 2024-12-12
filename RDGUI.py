@@ -85,65 +85,65 @@ class BusinessSupplyApp:
         self.setup_navigation()
 
     def setup_navigation(self):
-    # Create Treeview
-    self.nav_tree = ttk.Treeview(self.left_frame)
-    self.nav_tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-    # Define parent nodes
-    procedures_node = self.nav_tree.insert("", "end", text="Stored Procedures", open=True)
-    views_node = self.nav_tree.insert("", "end", text="Views", open=True)
-
-    # List of Stored Procedures
-    self.stored_procedures = [
-        "Add Owner",
-        "Add Business",
-        "Add Service",
-        "Add Location",
-        "Add Employee",
-        "Add Driver Role",
-        "Add Worker Role",
-        "Add Product",
-        "Add Van",
-        "Start Funding",
-        "Hire Employee",
-        "Fire Employee",
-        "Manage Service",
-        "Takeover Van",
-        "Load Van",
-        "Refuel Van",
-        "Drive Van",
-        "Purchase Product",
-        "Remove Product",
-        "Remove Van",
-        "Remove Driver Role"
-    ]
-
-    # List of Views
-    self.views = [
-        "Display Owner View",
-        "Display Employee View",
-        "Display Driver View",
-        "Display Location View",
-        "Display Product View",
-        "Display Service View",
-        "View All Businesses"  # Added "View All Businesses"
-    ]
-
-    # Insert procedures into Treeview
-    for proc in self.stored_procedures:
-        self.nav_tree.insert(procedures_node, "end", text=proc)
-
-    # Insert views into Treeview
-    for view in self.views:
-        self.nav_tree.insert(views_node, "end", text=view)
-
-    # Add Scrollbar to Navigation Treeview
-    scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
-    self.nav_tree.configure(yscroll=scrollbar.set)
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-    # Bind selection event
-    self.nav_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+        # Create Treeview
+        self.nav_tree = ttk.Treeview(self.left_frame)
+        self.nav_tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+    
+        # Define parent nodes
+        procedures_node = self.nav_tree.insert("", "end", text="Stored Procedures", open=True)
+        views_node = self.nav_tree.insert("", "end", text="Views", open=True)
+    
+        # List of Stored Procedures
+        self.stored_procedures = [
+            "Add Owner",
+            "Add Business",
+            "Add Service",
+            "Add Location",
+            "Add Employee",
+            "Add Driver Role",
+            "Add Worker Role",
+            "Add Product",
+            "Add Van",
+            "Start Funding",
+            "Hire Employee",
+            "Fire Employee",
+            "Manage Service",
+            "Takeover Van",
+            "Load Van",
+            "Refuel Van",
+            "Drive Van",
+            "Purchase Product",
+            "Remove Product",
+            "Remove Van",
+            "Remove Driver Role"
+        ]
+    
+        # List of Views
+        self.views = [
+            "Display Owner View",
+            "Display Employee View",
+            "Display Driver View",
+            "Display Location View",
+            "Display Product View",
+            "Display Service View",
+            "View All Businesses"  # Added "View All Businesses"
+        ]
+    
+        # Insert procedures into Treeview
+        for proc in self.stored_procedures:
+            self.nav_tree.insert(procedures_node, "end", text=proc)
+    
+        # Insert views into Treeview
+        for view in self.views:
+            self.nav_tree.insert(views_node, "end", text=view)
+    
+        # Add Scrollbar to Navigation Treeview
+        scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
+        self.nav_tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    
+        # Bind selection event
+        self.nav_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
 
 
     def on_tree_select(self, event):
