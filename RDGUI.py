@@ -147,33 +147,33 @@ class BusinessSupplyApp:
 
 
     def on_tree_select(self, event):
-    selected_item = self.nav_tree.focus()
-    item_text = self.nav_tree.item(selected_item, "text")
-    parent = self.nav_tree.parent(selected_item)
-    parent_text = self.nav_tree.item(parent, "text") if parent else ""
-
-    # Clear the right frame
-    for widget in self.right_frame.winfo_children():
-        widget.destroy()
-
-    # Determine whether it's a procedure or view
-    if parent_text == "Stored Procedures":
-        # Call the corresponding method for stored procedures
-        method_name = f"{self.format_method_name(item_text)}_form"
-        method = getattr(self, method_name, None)
-        if method:
-            method()
-        else:
-            self.show_message(f"No form implemented for {item_text}")
-    elif parent_text == "Views":
-        # Call the corresponding method for views
-        core_name = item_text.replace("Display ", "").replace(" View", "").replace("View All ", "all_")
-        method_name = f"display_{self.format_method_name(core_name)}_view"
-        method = getattr(self, method_name, None)
-        if method:
-            method()
-        else:
-            self.show_message(f"No display implemented for {item_text}")
+        selected_item = self.nav_tree.focus()
+        item_text = self.nav_tree.item(selected_item, "text")
+        parent = self.nav_tree.parent(selected_item)
+        parent_text = self.nav_tree.item(parent, "text") if parent else ""
+    
+        # Clear the right frame
+        for widget in self.right_frame.winfo_children():
+            widget.destroy()
+    
+        # Determine whether it's a procedure or view
+        if parent_text == "Stored Procedures":
+            # Call the corresponding method for stored procedures
+            method_name = f"{self.format_method_name(item_text)}_form"
+            method = getattr(self, method_name, None)
+            if method:
+                method()
+            else:
+                self.show_message(f"No form implemented for {item_text}")
+        elif parent_text == "Views":
+            # Call the corresponding method for views
+            core_name = item_text.replace("Display ", "").replace(" View", "").replace("View All ", "all_")
+            method_name = f"display_{self.format_method_name(core_name)}_view"
+            method = getattr(self, method_name, None)
+            if method:
+                method()
+            else:
+                self.show_message(f"No display implemented for {item_text}")
 
 
     def format_method_name(self, text):
