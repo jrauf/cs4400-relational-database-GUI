@@ -88,11 +88,11 @@ class BusinessSupplyApp:
         # Create Treeview
         self.nav_tree = ttk.Treeview(self.left_frame)
         self.nav_tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-    
+
         # Define parent nodes
         procedures_node = self.nav_tree.insert("", "end", text="Stored Procedures", open=True)
         views_node = self.nav_tree.insert("", "end", text="Views", open=True)
-    
+
         # List of Stored Procedures
         self.stored_procedures = [
             "Add Owner",
@@ -117,7 +117,7 @@ class BusinessSupplyApp:
             "Remove Van",
             "Remove Driver Role"
         ]
-    
+
         # List of Views
         self.views = [
             "Display Owner View",
@@ -127,67 +127,51 @@ class BusinessSupplyApp:
             "Display Product View",
             "Display Service View"
         ]
-    
+
         # Insert procedures into Treeview
         for proc in self.stored_procedures:
             self.nav_tree.insert(procedures_node, "end", text=proc)
-    
+
         # Insert views into Treeview
         for view in self.views:
             self.nav_tree.insert(views_node, "end", text=view)
-    
+
         # Add Scrollbar to Navigation Treeview
         scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
         self.nav_tree.configure(yscroll=scrollbar.set)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-    
+
         # Bind selection event
         self.nav_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
 
-def add_navigation_item(self, parent_text, new_item):
-    for item in self.nav_tree.get_children():
-        if self.nav_tree.item(item, "text") == parent_text:
-            self.nav_tree.insert(item, "end", text=new_item)
-            break
+    def on_tree_select(self, event):
+        selected_item = self.nav_tree.focus()
+        item_text = self.nav_tree.item(selected_item, "text")
+        parent = self.nav_tree.parent(selected_item)
+        parent_text = self.nav_tree.item(parent, "text") if parent else ""
 
-def remove_navigation_item(self, parent_text, item_to_remove):
-    for item in self.nav_tree.get_children():
-        if self.nav_tree.item(item, "text") == parent_text:
-            for child in self.nav_tree.get_children(item):
-                if self.nav_tree.item(child, "text") == item_to_remove:
-                    self.nav_tree.delete(child)
-                    break
-            break
+        # Clear the right frame
+        for widget in self.right_frame.winfo_children():
+            widget.destroy()
 
-def on_tree_select(self, event):
-    selected_item = self.nav_tree.focus()
-    item_text = self.nav_tree.item(selected_item, "text")
-    parent = self.nav_tree.parent(selected_item)
-    parent_text = self.nav_tree.item(parent, "text") if parent else ""
-
-    # Clear the right frame
-    for widget in self.right_frame.winfo_children():
-        widget.destroy()
-
-    # Determine whether it's a procedure or view
-    if parent_text == "Stored Procedures":
-        method_name = f"{self.format_method_name(item_text)}_form"
-        method = getattr(self, method_name, None)
-        if method:
-            method()
-        else:
-            self.show_message(f"No form implemented for {item_text}")
-    elif parent_text == "Views":
-        core_name = item_text.replace("Display ", "").replace(" View", "")
-        method_name = f"display_{self.format_method_name(core_name)}_view"
-        method = getattr(self, method_name, None)
-        if method:
-            method()
-        else:
-            self.show_message(f"No display implemented for {item_text}")
-
-def show_message(self, message):
-    messagebox.showinfo("Information", message)
+        # Determine whether it's a procedure or view
+        if parent_text == "Stored Procedures":
+            # Call the corresponding method
+            method_name = f"{self.format_method_name(item_text)}_form"
+            method = getattr(self, method_name, None)
+            if method:
+                method()
+            else:
+                self.show_message(f"No form implemented for {item_text}")
+        elif parent_text == "Views":
+            # Adjust method name construction for views
+            core_name = item_text.replace("Display ", "").replace(" View", "")
+            method_name = f"display_{self.format_method_name(core_name)}_view"
+            method = getattr(self, method_name, None)
+            if method:
+                method()
+            else:
+                self.show_message(f"No display implemented for {item_text}")
 
     def format_method_name(self, text):
         # Converts text like "Add Owner" to "add_owner"
