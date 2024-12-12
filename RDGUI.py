@@ -1902,6 +1902,34 @@ class BusinessSupplyApp:
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_service_view)
         load_button.pack(pady=10, anchor='e')
+def display_all_businesses_view(self):
+    form_frame = ttk.Frame(self.right_frame, padding=20)
+    form_frame.pack(fill=tk.BOTH, expand=True)
+
+    ttk.Label(form_frame, text="All Businesses", font=("Helvetica", 16)).pack(pady=10)
+
+    # Fetch data from the database
+    conn = connect_db()
+    if conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT * FROM Businesses")  # Update query as needed
+            rows = cursor.fetchall()
+
+            # Display data in a treeview
+            columns = ["ID", "Name", "Location", "Manager"]  # Adjust based on your database schema
+            tree = ttk.Treeview(form_frame, columns=columns, show="headings")
+            for col in columns:
+                tree.heading(col, text=col)
+                tree.column(col, width=100)
+            tree.pack(fill=tk.BOTH, expand=True, pady=10)
+
+            for row in rows:
+                tree.insert("", tk.END, values=row)
+        except pymysql.MySQLError as err:
+            messagebox.showerror("Error", f"Failed to retrieve businesses: {err}")
+        finally:
+            close_db(conn)
 
     # -------------------- Utility Methods --------------------
 
