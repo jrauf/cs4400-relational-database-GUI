@@ -85,93 +85,96 @@ class BusinessSupplyApp:
         self.setup_navigation()
 
     def setup_navigation(self):
-        # Create Treeview
-        self.nav_tree = ttk.Treeview(self.left_frame)
-        self.nav_tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+    # Create Treeview
+    self.nav_tree = ttk.Treeview(self.left_frame)
+    self.nav_tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        # Define parent nodes
-        procedures_node = self.nav_tree.insert("", "end", text="Stored Procedures", open=True)
-        views_node = self.nav_tree.insert("", "end", text="Views", open=True)
+    # Define parent nodes
+    procedures_node = self.nav_tree.insert("", "end", text="Stored Procedures", open=True)
+    views_node = self.nav_tree.insert("", "end", text="Views", open=True)
 
-        # List of Stored Procedures
-        self.stored_procedures = [
-            "Add Owner",
-            "Add Business",
-            "Add Service",
-            "Add Location",
-            "Add Employee",
-            "Add Driver Role",
-            "Add Worker Role",
-            "Add Product",
-            "Add Van",
-            "Start Funding",
-            "Hire Employee",
-            "Fire Employee",
-            "Manage Service",
-            "Takeover Van",
-            "Load Van",
-            "Refuel Van",
-            "Drive Van",
-            "Purchase Product",
-            "Remove Product",
-            "Remove Van",
-            "Remove Driver Role"
-        ]
+    # List of Stored Procedures
+    self.stored_procedures = [
+        "Add Owner",
+        "Add Business",
+        "Add Service",
+        "Add Location",
+        "Add Employee",
+        "Add Driver Role",
+        "Add Worker Role",
+        "Add Product",
+        "Add Van",
+        "Start Funding",
+        "Hire Employee",
+        "Fire Employee",
+        "Manage Service",
+        "Takeover Van",
+        "Load Van",
+        "Refuel Van",
+        "Drive Van",
+        "Purchase Product",
+        "Remove Product",
+        "Remove Van",
+        "Remove Driver Role"
+    ]
 
-        # List of Views
-        self.views = [
-            "Display Owner View",
-            "Display Employee View",
-            "Display Driver View",
-            "Display Location View",
-            "Display Product View",
-            "Display Service View"
-        ]
+    # List of Views
+    self.views = [
+        "Display Owner View",
+        "Display Employee View",
+        "Display Driver View",
+        "Display Location View",
+        "Display Product View",
+        "Display Service View",
+        "View All Businesses"  # Added "View All Businesses"
+    ]
 
-        # Insert procedures into Treeview
-        for proc in self.stored_procedures:
-            self.nav_tree.insert(procedures_node, "end", text=proc)
+    # Insert procedures into Treeview
+    for proc in self.stored_procedures:
+        self.nav_tree.insert(procedures_node, "end", text=proc)
 
-        # Insert views into Treeview
-        for view in self.views:
-            self.nav_tree.insert(views_node, "end", text=view)
+    # Insert views into Treeview
+    for view in self.views:
+        self.nav_tree.insert(views_node, "end", text=view)
 
-        # Add Scrollbar to Navigation Treeview
-        scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
-        self.nav_tree.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    # Add Scrollbar to Navigation Treeview
+    scrollbar = ttk.Scrollbar(self.left_frame, orient=tk.VERTICAL, command=self.nav_tree.yview)
+    self.nav_tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        # Bind selection event
-        self.nav_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+    # Bind selection event
+    self.nav_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+
 
     def on_tree_select(self, event):
-        selected_item = self.nav_tree.focus()
-        item_text = self.nav_tree.item(selected_item, "text")
-        parent = self.nav_tree.parent(selected_item)
-        parent_text = self.nav_tree.item(parent, "text") if parent else ""
+    selected_item = self.nav_tree.focus()
+    item_text = self.nav_tree.item(selected_item, "text")
+    parent = self.nav_tree.parent(selected_item)
+    parent_text = self.nav_tree.item(parent, "text") if parent else ""
 
-        # Clear the right frame
-        for widget in self.right_frame.winfo_children():
-            widget.destroy()
+    # Clear the right frame
+    for widget in self.right_frame.winfo_children():
+        widget.destroy()
 
-        # Determine whether it's a procedure or view
-        if parent_text == "Stored Procedures":
-            # Call the corresponding method
-            method_name = f"{self.format_method_name(item_text)}_form"
-            method = getattr(self, method_name, None)
-            if method:
-                method()
-            else:
-                self.show_message(f"No form implemented for {item_text}")
-        elif parent_text == "Views":
-            # Adjust method name construction for views
-            core_name = item_text.replace("Display ", "").replace(" View", "")
-            method_name = f"display_{self.format_method_name(core_name)}_view"
-            method = getattr(self, method_name, None)
-            if method:
-                method()
-            else:
-                self.show_message(f"No display implemented for {item_text}")
+    # Determine whether it's a procedure or view
+    if parent_text == "Stored Procedures":
+        # Call the corresponding method for stored procedures
+        method_name = f"{self.format_method_name(item_text)}_form"
+        method = getattr(self, method_name, None)
+        if method:
+            method()
+        else:
+            self.show_message(f"No form implemented for {item_text}")
+    elif parent_text == "Views":
+        # Call the corresponding method for views
+        core_name = item_text.replace("Display ", "").replace(" View", "").replace("View All ", "all_")
+        method_name = f"display_{self.format_method_name(core_name)}_view"
+        method = getattr(self, method_name, None)
+        if method:
+            method()
+        else:
+            self.show_message(f"No display implemented for {item_text}")
+
 
     def format_method_name(self, text):
         # Converts text like "Add Owner" to "add_owner"
@@ -1902,6 +1905,35 @@ class BusinessSupplyApp:
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_service_view)
         load_button.pack(pady=10, anchor='e')
+    def display_all_businesses_view(self):
+        form_frame = ttk.Frame(self.right_frame, padding=20)
+        form_frame.pack(fill=tk.BOTH, expand=True)
+    
+        ttk.Label(form_frame, text="All Businesses", font=("Helvetica", 16)).pack(pady=10)
+    
+        # Fetch data from the database
+        conn = connect_db()
+        if conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute("SELECT * FROM Businesses")  # Update query as needed
+                rows = cursor.fetchall()
+    
+                # Display data in a treeview
+                columns = ["ID", "Name", "Location", "Manager"]  # Adjust based on your database schema
+                tree = ttk.Treeview(form_frame, columns=columns, show="headings")
+                for col in columns:
+                    tree.heading(col, text=col)
+                    tree.column(col, width=100)
+                tree.pack(fill=tk.BOTH, expand=True, pady=10)
+    
+                for row in rows:
+                    tree.insert("", tk.END, values=row)
+            except pymysql.MySQLError as err:
+                messagebox.showerror("Error", f"Failed to retrieve businesses: {err}")
+            finally:
+                close_db(conn)
+
 
     # -------------------- Utility Methods --------------------
 
