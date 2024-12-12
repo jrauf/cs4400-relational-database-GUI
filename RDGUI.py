@@ -32,7 +32,7 @@ def connect_db():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='admin1234',
+            password='PASSWORD',
             database='business_supply',
             cursorclass=pymysql.cursors.DictCursor  # Set default cursor to DictCursor if needed
         )
