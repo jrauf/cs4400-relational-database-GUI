@@ -16,7 +16,7 @@ import pymysql  # USING PyMySQL
 #         conn = mysql.connector.connect(
 #             host='localhost',
 #             user='root',
-#             password=qwerty6920',
+#             password='qwerty6920',
 #             database='business_supply'
 #         )
 #         print("Database connection established.")
@@ -32,7 +32,7 @@ def connect_db():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='admin1234',
+            password='qwerty6920',
             database='business_supply',
             cursorclass=pymysql.cursors.DictCursor  # Set default cursor to DictCursor if needed
         )
