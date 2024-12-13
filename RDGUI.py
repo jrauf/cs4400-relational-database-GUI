@@ -1691,16 +1691,16 @@ class BusinessSupplyApp:
     def display_location_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
+    
         ttk.Label(display_frame, text="Location View", font=("Helvetica", 16)).pack(pady=10)
-
+    
         # Create a Frame for Treeview and Scrollbars
         tree_frame = ttk.Frame(display_frame)
         tree_frame.pack(fill=tk.BOTH, expand=True)
-
+    
         # Create Treeview
         tree = ttk.Treeview(tree_frame, columns=("Label", "X Coord", "Y Coord", "Long Name",
-                                               "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
+                                                 "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
         # Define headings
         headings = [
             ("Label", "Label"),
@@ -1715,21 +1715,21 @@ class BusinessSupplyApp:
         for col, text in headings:
             tree.heading(col, text=text)
             tree.column(col, anchor=tk.CENTER, width=120)
-
+    
         # Create Scrollbars
         vsb = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=tree.yview)
         hsb = ttk.Scrollbar(tree_frame, orient=tk.HORIZONTAL, command=tree.xview)
         tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
-
+    
         # Place Treeview and Scrollbars
         tree.grid(row=0, column=0, sticky='nsew')
         vsb.grid(row=0, column=1, sticky='ns')
         hsb.grid(row=1, column=0, sticky='ew')
-
+    
         # Configure grid weights
         tree_frame.rowconfigure(0, weight=1)
         tree_frame.columnconfigure(0, weight=1)
-
+    
         # Load Location View Data
         def load_location_view():
             conn = connect_db()
@@ -1744,21 +1744,21 @@ class BusinessSupplyApp:
                     # Insert new data
                     for row in rows:
                         tree.insert("", tk.END, values=(
-                            row.get("label"),
-                            row.get("x_coord"),
-                            row.get("y_coord"),
-                            row.get("long_name"),
-                            row.get("num_vans"),
-                            row.get("van_ids"),
-                            row.get("capacity"),
-                            row.get("remaining_capacity")
+                            row[0],  # Adjust based on actual column order in your SQL result
+                            row[1],
+                            row[2],
+                            row[3],
+                            row[4],
+                            row[5],
+                            row[6],
+                            row[7]
                         ))
                 except pymysql.MySQLError as err:  # MODIFIED: Using pymysql.MySQLError
                     messagebox.showerror("Error", f"Failed to load location view: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+    
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
         load_button.pack(pady=10, anchor='e')
