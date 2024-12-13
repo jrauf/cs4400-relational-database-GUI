@@ -1691,13 +1691,13 @@ class BusinessSupplyApp:
     def display_location_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
         display_frame.pack(fill=tk.BOTH, expand=True)
-
+    
         ttk.Label(display_frame, text="Location View", font=("Helvetica", 16)).pack(pady=10)
-
+    
         # Create a Frame for Treeview and Scrollbars
         tree_frame = ttk.Frame(display_frame)
         tree_frame.pack(fill=tk.BOTH, expand=True)
-
+    
         # Create Treeview
         tree = ttk.Treeview(tree_frame, columns=("Label", "X Coord", "Y Coord", "Long Name",
                                                "Number of Vans", "Van IDs", "Capacity", "Remaining Capacity"), show='headings')
@@ -1715,28 +1715,28 @@ class BusinessSupplyApp:
         for col, text in headings:
             tree.heading(col, text=text)
             tree.column(col, anchor=tk.CENTER, width=120)
-
+    
         # Create Scrollbars
         vsb = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=tree.yview)
         hsb = ttk.Scrollbar(tree_frame, orient=tk.HORIZONTAL, command=tree.xview)
         tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
-
+    
         # Place Treeview and Scrollbars
         tree.grid(row=0, column=0, sticky='nsew')
         vsb.grid(row=0, column=1, sticky='ns')
         hsb.grid(row=1, column=0, sticky='ew')
-
+    
         # Configure grid weights
         tree_frame.rowconfigure(0, weight=1)
         tree_frame.columnconfigure(0, weight=1)
-
+    
         # Load Location View Data
         def load_location_view():
             conn = connect_db()
             if conn:
-                cursor = conn.cursor()
+                cursor = conn.cursor()  # Using default cursor (DictCursor is set by default in connect_db)
                 try:
-                    cursor.execute("SELECT * FROM display_location_view")
+                    cursor.execute("SELECT * FROM locations")  # Use the table name here instead of the view name
                     rows = cursor.fetchall()
                     # Clear existing data
                     for item in tree.get_children():
@@ -1758,10 +1758,11 @@ class BusinessSupplyApp:
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-
+    
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
         load_button.pack(pady=10, anchor='e')
+
 
     def display_product_view(self):
         display_frame = ttk.Frame(self.right_frame, padding=10)
