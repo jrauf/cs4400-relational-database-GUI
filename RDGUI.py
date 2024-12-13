@@ -16,7 +16,7 @@ import pymysql  # USING PyMySQL
 #         conn = mysql.connector.connect(
 #             host='localhost',
 #             user='root',
-#             password='admin1234',
+#             password=qwerty6920',
 #             database='business_supply'
 #         )
 #         print("Database connection established.")
