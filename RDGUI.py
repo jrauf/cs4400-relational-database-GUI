@@ -501,7 +501,7 @@ class BusinessSupplyApp:
         ttk.Label(form_frame, text="Add Driver Role", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
 
-        labels = ["Username", "License ID":, "License Type":, "Driver Experience (trips):"]
+        labels = ["Username", "License ID:", "License Type:", "Driver Experience (trips):"]
         fields = []
         for i, lbl in enumerate(labels, start=1):
             ttk.Label(form_frame, text=lbl).grid(row=i, column=0, sticky=tk.E, padx=5, pady=5)
