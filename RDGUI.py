@@ -1736,7 +1736,7 @@ class BusinessSupplyApp:
             if conn:
                 cursor = conn.cursor()  # Using default cursor (DictCursor is set by default in connect_db)
                 try:
-                    cursor.execute("SELECT * FROM locations")  # Use the table name here instead of the view name
+                    cursor.execute("SELECT * FROM locations")  # Ensure this matches the table structure
                     rows = cursor.fetchall()
                     # Clear existing data
                     for item in tree.get_children():
@@ -1744,21 +1744,21 @@ class BusinessSupplyApp:
                     # Insert new data
                     for row in rows:
                         tree.insert("", tk.END, values=(
-                            row.get("label"),
-                            row.get("x_coord"),
-                            row.get("y_coord"),
-                            row.get("long_name"),
-                            row.get("num_vans"),
-                            row.get("van_ids"),
-                            row.get("capacity"),
-                            row.get("remaining_capacity")
+                            row["label"],             # Accessing as 'label' key from the row dictionary
+                            row["x_coord"],           # Accessing as 'x_coord' key from the row dictionary
+                            row["y_coord"],           # Accessing as 'y_coord' key from the row dictionary
+                            row["long_name"],         # Adjust the column name if necessary
+                            row["num_vans"],          # Adjust the column name if necessary
+                            row["van_ids"],           # Adjust the column name if necessary
+                            row["capacity"],          # Adjust the column name if necessary
+                            row["remaining_capacity"] # Adjust the column name if necessary
                         ))
                 except pymysql.MySQLError as err:  # MODIFIED: Using pymysql.MySQLError
                     messagebox.showerror("Error", f"Failed to load location view: {err}")
                     print(f"View load error: {err}")
                 finally:
                     close_db(conn)
-    
+        
         # Load Button
         load_button = ttk.Button(display_frame, text="Load View", command=load_location_view)
         load_button.pack(pady=10, anchor='e')
