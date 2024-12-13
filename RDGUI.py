@@ -500,24 +500,16 @@ class BusinessSupplyApp:
 
         ttk.Label(form_frame, text="Add Driver Role", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
-        ttk.Label(form_frame, text="Username").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
-        username = ttk.Entry(form_frame)
-        username.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(form_frame, text="License ID:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
-        license_id = ttk.Entry(form_frame)
-        license_id.grid(row=2, column=1, padx=5, pady=5)
+        labels = ["Username", "License ID":, "License Type":, "Driver Experience (trips):"]
+        fields = []
+        for i, lbl in enumerate(labels, start=1):
+            ttk.Label(form_frame, text=lbl).grid(row=i, column=0, sticky=tk.E, padx=5, pady=5)
+            entry = ttk.Entry(form_frame)
+            entry.grid(row=i, column=1, padx=5, pady=5)
+            fields.append(entry)
 
-        ttk.Label(form_frame, text="License Type:").grid(row=3, column=0, sticky=tk.E, padx=5, pady=5)
-        license_type = ttk.Entry(form_frame)
-        license_type.grid(row=3, column=1, padx=5, pady=5)
-
-        ttk.Label(form_frame, text="Driver Experience (trips):").grid(row=4, column=0, sticky=tk.E, padx=5, pady=5)
-        driver_experience = ttk.Entry(form_frame)
-        driver_experience.grid(row=4, column=1, padx=5, pady=5)
-
-
-
+        username, license_id, license_type, driver_experience = fields
 
         def add_driver_role():
             if not validate_fields([username, license_id, license_type, driver_experience]):
@@ -544,10 +536,8 @@ class BusinessSupplyApp:
                     conn.commit()
                     messagebox.showinfo("Success", "Driver role added successfully.")
                     
-                    username.delete(0, tk.END)
-                    license_id.delete(0, tk.END)
-                    license_type.delete(0, tk.END)
-                    driver_experience.delete(0, tk.END)
+                    for field in fields:
+                        field.delete(0, tk.END)
                 except pymysql.MySQLError as err:
                     messagebox.showerror("Error", f"Failed to add driver role: {err}")
                     print(f"Stored procedure error: {err}")
@@ -558,7 +548,7 @@ class BusinessSupplyApp:
         button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
         ttk.Button(button_frame, text="Add Driver Role", command=add_driver_role).pack(side=tk.RIGHT, padx=5)
-        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username, license_id, license_type, driver_experience])).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=fields)).pack(side=tk.RIGHT, padx=5)
 
     def add_worker_role_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
