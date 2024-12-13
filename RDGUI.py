@@ -508,7 +508,6 @@ class BusinessSupplyApp:
             e.grid(row=i, column=1, padx=5, pady=5)
             entries.append(e)
 
-        username, license_id, license_type, driver_experience = entries
 
         def add_driver_role():
             if not validate_fields(entries):
