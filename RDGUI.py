@@ -1736,7 +1736,7 @@ class BusinessSupplyApp:
             if conn:
                 cursor = conn.cursor()  # Using default cursor (DictCursor is set by default in connect_db)
                 try:
-                    cursor.execute("SELECT * FROM locations")  # Ensure this matches the table structure
+                    cursor.execute("SELECT * FROM display_location_view")  # Use the view for fetching data
                     rows = cursor.fetchall()
                     # Clear existing data
                     for item in tree.get_children():
