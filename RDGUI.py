@@ -558,7 +558,7 @@ class BusinessSupplyApp:
         button_frame.grid(row=5, column=0, columnspan=2, pady=20)
 
         ttk.Button(button_frame, text="Add Driver Role", command=add_driver_role).pack(side=tk.RIGHT, padx=5)
-        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=entries)).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Clear", command=lambda: self.clear_fields(fields=[username, license_id, license_type, driver_experience])).pack(side=tk.RIGHT, padx=5)
 
     def add_worker_role_form(self):
         form_frame = ttk.Frame(self.right_frame, padding=20)
